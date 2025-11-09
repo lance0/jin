@@ -10,6 +10,7 @@ import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { PlayCircle } from "lucide-react";
+import packageJson from "../../package.json";
 
 interface AboutDialogProps {
   open: boolean;
@@ -18,7 +19,7 @@ interface AboutDialogProps {
 }
 
 export const AboutDialog = memo(function AboutDialog({ open, onOpenChange, onRestartTour }: AboutDialogProps) {
-  const version = "1.0.0"; // TODO: Get from package.json or Tauri config
+  const version = packageJson.version;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
