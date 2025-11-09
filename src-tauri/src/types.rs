@@ -118,8 +118,4 @@ impl ScanCacheState {
     pub fn insert(&self, path: String, cache_entry: FileCache) {
         self.cache.insert(path, cache_entry);
     }
-
-    pub fn clear(&self) {
-        self.cache.clear();
-    }
 }
