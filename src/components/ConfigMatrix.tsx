@@ -100,7 +100,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
     try {
       await navigator.clipboard.writeText(text);
       toast.success(`Copied "${key}" to clipboard`);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy to clipboard");
     }
   }, []);
@@ -117,16 +117,10 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
 
       await navigator.clipboard.writeText(content);
       toast.success(`Copied ${fileEntries.length} values from ${filePath.split('/').pop()}`);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy to clipboard");
     }
   }, [entries]);
-
-  const maskValue = (value: any): string => {
-    const str = String(value ?? "");
-    if (str.length <= 4) return "****";
-    return str.substring(0, 4) + "***";
-  };
 
   if (files.length === 0) {
     return (
