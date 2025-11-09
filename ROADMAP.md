@@ -35,28 +35,35 @@
 
 ---
 
-## 🚧 Phase 2: Enhancement (Week 2)
+## 🚧 Phase 2: Enhancement & Performance (In Progress)
+
+### Performance ✅ COMPLETED
+- [x] Async backend with Tokio runtime
+- [x] Parallel file processing
+- [x] Non-blocking file I/O
+- [x] React performance optimization (memo, useCallback, useMemo)
+- [x] Zustand state subscription optimization
+- [x] Remove expensive CSS transitions
+- [x] Instant theme switching
 
 ### UI Improvements
+- [x] Rescan button (completed)
+- [x] Click-to-reveal for secrets (completed)
 - [ ] Drag-and-drop folder selection
 - [ ] File column show/hide toggles
-- [ ] Responsive mobile layout improvements
 - [ ] Add app icon (hedgehog theme)
 - [ ] Splash screen / about modal
 - [ ] Keyboard shortcuts (Cmd/Ctrl+O, Cmd/Ctrl+E, F for search)
 
 ### Functionality
-- [ ] Rescan button with debounce
 - [ ] Export location chooser (not just project root)
 - [ ] Copy individual values to clipboard
 - [ ] Export to different formats (JSON, YAML)
 - [ ] Custom ignore patterns (user-defined)
 
 ### Polish
-- [ ] Animated transitions
 - [ ] Better error messages
 - [ ] Empty state illustrations
-- [ ] Success/error states with animations
 - [ ] Onboarding tour
 
 ---
@@ -82,9 +89,10 @@
 - [ ] Required vs optional key marking
 
 ### Performance
+- [x] Async file I/O (completed in Phase 2)
+- [x] Parallel file processing (completed in Phase 2)
 - [ ] Virtual scrolling for 500+ keys
 - [ ] Incremental parsing for large files
-- [ ] Background scanning
 - [ ] Cache scan results
 
 ### Extensibility

@@ -7,9 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Click-to-reveal for masked secrets in config matrix
+- Rescan button for quick folder re-scanning
+- Loading states with proper state management
+
+### Changed
+- **MAJOR PERFORMANCE IMPROVEMENTS**: Theme switching and overall responsiveness drastically improved
+- Converted Rust backend to async operations with Tokio
+- Implemented parallel file processing using tokio::spawn
+- Replaced blocking file I/O with async tokio::fs operations
+- Fixed Zustand state subscriptions to prevent unnecessary re-renders
+- Added React.memo to all components
+- Added useCallback and useMemo optimizations throughout
+- Removed expensive CSS transitions from table elements (hundreds of cells)
+- Removed gradient text effects and backdrop-blur for better performance
+- Optimized ConfigMatrix component to eliminate animation overhead
+
+### Fixed
+- Loading state properly resets after scan completes or fails
+- Main thread no longer blocks during file operations
+- Theme switching is now instant instead of laggy
+- UI remains responsive during large folder scans
+
 ### Planned
 - Drag-and-drop folder selection
-- Click-to-reveal for masked secrets
 - File column show/hide toggles
 - Keyboard shortcuts
 - Virtual scrolling for large datasets
