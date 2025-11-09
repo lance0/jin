@@ -49,20 +49,20 @@
 ### UI Improvements
 - [x] Rescan button (completed)
 - [x] Click-to-reveal for secrets (completed)
-- [ ] Drag-and-drop folder selection
-- [ ] File column show/hide toggles
+- [x] Drag-and-drop folder feedback (completed)
+- [x] File column show/hide toggles (completed)
+- [x] Keyboard shortcuts (Cmd/Ctrl+O, Cmd/Ctrl+E, Cmd/Ctrl+R) (completed)
 - [ ] Add app icon (hedgehog theme)
 - [ ] Splash screen / about modal
-- [ ] Keyboard shortcuts (Cmd/Ctrl+O, Cmd/Ctrl+E, F for search)
 
 ### Functionality
-- [ ] Export location chooser (not just project root)
-- [ ] Copy individual values to clipboard
-- [ ] Export to different formats (JSON, YAML)
+- [x] Export location chooser (not just project root) (completed)
+- [x] Copy individual values to clipboard (completed)
+- [x] Export to different formats (JSON, YAML) (completed)
 - [ ] Custom ignore patterns (user-defined)
 
 ### Polish
-- [ ] Better error messages
+- [x] Better error messages (completed)
 - [ ] Empty state illustrations
 - [ ] Onboarding tour
 
