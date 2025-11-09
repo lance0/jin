@@ -35,7 +35,7 @@
 
 ---
 
-## 🚧 Phase 2: Enhancement & Performance (In Progress)
+## ✅ Phase 2: Enhancement & Performance (COMPLETED)
 
 ### Performance ✅ COMPLETED
 - [x] Async backend with Tokio runtime
@@ -46,20 +46,19 @@
 - [x] Remove expensive CSS transitions
 - [x] Instant theme switching
 
-### UI Improvements
+### UI Improvements ✅ COMPLETED
 - [x] Rescan button (completed)
 - [x] Click-to-reveal for secrets (completed)
 - [x] Drag-and-drop folder feedback (completed)
 - [x] File column show/hide toggles (completed)
 - [x] Keyboard shortcuts (Cmd/Ctrl+O, Cmd/Ctrl+E, Cmd/Ctrl+R) (completed)
-- [ ] Add app icon (hedgehog theme)
-- [ ] Splash screen / about modal
+- [x] Add app icon (hedgehog theme) (completed)
+- [x] About modal with Jin memorial (completed)
 
-### Functionality
+### Functionality ✅ COMPLETED
 - [x] Export location chooser (not just project root) (completed)
 - [x] Copy individual values to clipboard (completed)
 - [x] Export to different formats (JSON, YAML) (completed)
-- [ ] Custom ignore patterns (user-defined)
 
 ### Polish
 - [x] Better error messages (completed)
