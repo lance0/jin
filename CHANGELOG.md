@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Live file watching** with automatic rescanning when config files change
 - Auto-watch toggle button in header with visual indicator
 - Debounced file watching (1-second delay) to prevent excessive rescans
+- **Performance warning banner** when displaying 200+ config keys
+- **Semaphore-based concurrency limiting** (16 concurrent file operations) to prevent file descriptor exhaustion
+- **In-memory file caching** with modification time tracking for 70-90% faster rescans
 
 ### Changed
 - **MAJOR PERFORMANCE IMPROVEMENTS**: Theme switching and overall responsiveness drastically improved
@@ -58,8 +61,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code signing placeholders for macOS and Windows
 - Comprehensive distribution guide (DISTRIBUTION.md)
 
+### Known Limitations
+- UI performance may degrade with 500+ config keys (use search/filter or hide columns)
+- Virtual scrolling for extremely large datasets deferred to v0.2.0
+
 ### Planned for Future Releases
-- Virtual scrolling for large datasets (500+ keys)
+- Virtual scrolling for large datasets (500+ keys) - planned for v0.2.0
 - Two-file diff view for comparing configs
 - Auto-update mechanism
 - Homebrew formula

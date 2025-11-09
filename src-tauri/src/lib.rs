@@ -12,23 +12,79 @@ use analyzer::analyze_entries;
 use exporter::export_env_example;
 use parser::parse_file;
 use scanner::scan_directory;
-use types::{ExportFormat, NormalizedEntry, ParseError, ScanResult, ScanSummary};
+use types::{ExportFormat, FileCache, NormalizedEntry, ParseError, ScanCacheState, ScanResult, ScanSummary};
 use watcher::{FileWatcherState, start_watching, stop_watching, get_watching_status};
+use std::sync::Arc;
+use tokio::sync::Semaphore;
 
 #[tauri::command]
-async fn scan_folder(path: String) -> Result<ScanResult, String> {
+async fn scan_folder(
+    path: String,
+    cache_state: tauri::State<'_, ScanCacheState>
+) -> Result<ScanResult, String> {
     // Step 1: Discover files
     let mut files = scan_directory(&path)?;
 
-    // Step 2: Parse files in parallel
+    // Step 2: Create semaphore to limit concurrent file operations (16 concurrent tasks)
+    let semaphore = Arc::new(Semaphore::new(16));
+
+    // Step 3: Parse files in parallel with caching and concurrency limiting
     let mut parse_tasks = Vec::new();
     for file in &files {
         let path_clone = path.clone();
         let file_path = file.path.clone();
         let file_format = file.format.clone();
+        let sem = Arc::clone(&semaphore);
+        let cache = (*cache_state).clone();
 
         parse_tasks.push(tokio::spawn(async move {
-            parse_file(&path_clone, &file_path, &file_format).await
+            // Acquire semaphore permit (limits concurrency)
+            let _permit = sem.acquire().await.unwrap();
+
+            // Check cache first - get file modification time
+            let file_metadata = match tokio::fs::metadata(&file_path).await {
+                Ok(meta) => meta,
+                Err(e) => {
+                    return Err(ParseError {
+                        file: file_path,
+                        message: format!("Failed to read file metadata: {}", e),
+                    });
+                }
+            };
+
+            let modified_time = match file_metadata.modified() {
+                Ok(time) => time,
+                Err(e) => {
+                    return Err(ParseError {
+                        file: file_path,
+                        message: format!("Failed to get modification time: {}", e),
+                    });
+                }
+            };
+
+            // Check if we have a cached version
+            if let Some(cached) = cache.get(&file_path) {
+                // If modification time matches, use cached entries
+                if cached.modified_time == modified_time {
+                    return Ok(cached.entries);
+                }
+            }
+
+            // Cache miss or file changed - parse the file
+            let result = parse_file(&path_clone, &file_path, &file_format).await;
+
+            // Update cache if parsing succeeded
+            if let Ok(ref entries) = result {
+                cache.insert(
+                    file_path.clone(),
+                    FileCache {
+                        modified_time,
+                        entries: entries.clone(),
+                    },
+                );
+            }
+
+            result
         }));
     }
 
@@ -54,11 +110,11 @@ async fn scan_folder(path: String) -> Result<ScanResult, String> {
         }
     }
 
-    // Step 3: Analyze for issues
+    // Step 4: Analyze for issues
     let mut issues = analyze_entries(&all_entries);
     issues.parse_errors = parse_errors;
 
-    // Step 4: Generate summary
+    // Step 5: Generate summary
     let unique_keys: std::collections::HashSet<String> =
         all_entries.iter().map(|e| e.key.clone()).collect();
 
@@ -107,6 +163,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .manage(FileWatcherState::new())
+        .manage(ScanCacheState::new())
         .invoke_handler(tauri::generate_handler![
             scan_folder,
             export_env_example_cmd,

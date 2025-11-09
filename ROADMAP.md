@@ -45,6 +45,10 @@
 - [x] Zustand state subscription optimization
 - [x] Remove expensive CSS transitions
 - [x] Instant theme switching
+- [x] Semaphore-based concurrency limiting (16 concurrent file operations)
+- [x] In-memory file caching with modification time tracking
+- [x] Performance warning for large datasets (200+ keys)
+- [x] CSS performance optimizations (will-change hints)
 
 ### UI Improvements ✅ COMPLETED
 - [x] Rescan button (completed)
@@ -93,9 +97,11 @@
 ### Performance
 - [x] Async file I/O (completed in Phase 2)
 - [x] Parallel file processing (completed in Phase 2)
-- [ ] Virtual scrolling for 500+ keys
+- [x] Semaphore-based concurrency limiting (completed in Phase 2)
+- [x] In-memory caching with modification time tracking (completed in Phase 2)
+- [ ] Virtual scrolling for 500+ keys (planned for v0.2.0 - currently handled with warning banner)
 - [ ] Incremental parsing for large files
-- [ ] Cache scan results
+- [ ] Disk-persisted cache between app launches
 
 ### Extensibility
 - [ ] Plugin system for custom parsers

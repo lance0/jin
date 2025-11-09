@@ -203,8 +203,18 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
         )}
       </div>
 
+      {/* Performance warning for large datasets */}
+      {filteredKeys.length > 200 && (
+        <div className="px-6 py-2 bg-amber-500/10 border-b border-amber-500/20 flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+          <span className="text-sm text-amber-900 dark:text-amber-200">
+            Showing {filteredKeys.length} keys. For better performance, try using search or hiding columns.
+          </span>
+        </div>
+      )}
+
       {/* Matrix table */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto" style={{willChange: 'scroll-position'}}>
         <table className="w-full">
           <thead className="sticky top-0 bg-muted z-10 shadow-sm">
             <tr>

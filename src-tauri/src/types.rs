@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::time::SystemTime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -87,4 +88,38 @@ pub struct ScanResult {
     pub entries: Vec<NormalizedEntry>,
     pub issues: ScanIssues,
     pub summary: ScanSummary,
+}
+
+// Cache structures for incremental scanning
+#[derive(Debug, Clone)]
+pub struct FileCache {
+    pub modified_time: SystemTime,
+    pub entries: Vec<NormalizedEntry>,
+}
+
+#[derive(Clone)]
+pub struct ScanCacheState {
+    // Key: file path, Value: cached file data
+    // DashMap is already thread-safe, we just need to make the state cloneable via Arc
+    cache: std::sync::Arc<dashmap::DashMap<String, FileCache>>,
+}
+
+impl ScanCacheState {
+    pub fn new() -> Self {
+        Self {
+            cache: std::sync::Arc::new(dashmap::DashMap::new()),
+        }
+    }
+
+    pub fn get(&self, path: &str) -> Option<FileCache> {
+        self.cache.get(path).map(|entry| entry.value().clone())
+    }
+
+    pub fn insert(&self, path: String, cache_entry: FileCache) {
+        self.cache.insert(path, cache_entry);
+    }
+
+    pub fn clear(&self) {
+        self.cache.clear();
+    }
 }
