@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { toast, Toaster } from "sonner";
@@ -11,18 +11,16 @@ import { useScan } from "./store/useScan";
 import type { ScanResult } from "./types";
 
 function App() {
-  const {
-    projectPath,
-    files,
-    entries,
-    issues,
-    summary,
-    isScanning,
-    error,
-    setScanResult,
-    setIsScanning,
-    setError,
-  } = useScan();
+  // Use selective Zustand subscriptions to prevent unnecessary re-renders
+  const projectPath = useScan((state) => state.projectPath);
+  const files = useScan((state) => state.files);
+  const entries = useScan((state) => state.entries);
+  const issues = useScan((state) => state.issues);
+  const isScanning = useScan((state) => state.isScanning);
+  const error = useScan((state) => state.error);
+  const setScanResult = useScan((state) => state.setScanResult);
+  const setIsScanning = useScan((state) => state.setIsScanning);
+  const setError = useScan((state) => state.setError);
 
   const scanFolder = useCallback(async (path: string) => {
     try {
@@ -39,7 +37,7 @@ function App() {
     }
   }, [setScanResult, setIsScanning, setError]);
 
-  const handleChooseFolder = async () => {
+  const handleChooseFolder = useCallback(async () => {
     try {
       const selected = await open({
         directory: true,
@@ -54,15 +52,15 @@ function App() {
       const errorMessage = err instanceof Error ? err.message : String(err);
       toast.error(`Failed to open folder: ${errorMessage}`);
     }
-  };
+  }, [scanFolder]);
 
-  const handleRescan = () => {
+  const handleRescan = useCallback(() => {
     if (projectPath) {
       scanFolder(projectPath);
     }
-  };
+  }, [projectPath, scanFolder]);
 
-  const handleExport = async () => {
+  const handleExport = useCallback(async () => {
     if (!projectPath || entries.length === 0) {
       toast.error("No data to export");
       return;
@@ -78,7 +76,7 @@ function App() {
       const errorMessage = err instanceof Error ? err.message : String(err);
       toast.error(`Export failed: ${errorMessage}`);
     }
-  };
+  }, [projectPath, entries]);
 
   // Show welcome screen if no project selected
   if (!projectPath) {
@@ -105,11 +103,13 @@ function App() {
       </div>
 
       <Footer
-        issueCount={
-          issues.duplicates.length +
-          issues.missingByEnvFile.length +
-          issues.parseErrors.length
-        }
+        issueCount={useMemo(
+          () =>
+            issues.duplicates.length +
+            issues.missingByEnvFile.length +
+            issues.parseErrors.length,
+          [issues]
+        )}
         onExport={handleExport}
       />
 

@@ -110,20 +110,6 @@
     @apply bg-background text-foreground;
     font-family: system-ui, -apple-system, sans-serif;
   }
-
-  /* Instant theme transitions - no lag */
-  html,
-  body,
-  header,
-  footer,
-  aside,
-  button,
-  div,
-  section {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-duration: 0s;
-    transition-timing-function: step-end;
-  }
 }
 
 /* Custom animations */

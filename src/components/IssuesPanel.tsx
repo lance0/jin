@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { Badge } from "./ui/badge";
 import { AlertTriangle, FileWarning, Check } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
@@ -7,16 +8,19 @@ interface IssuesPanelProps {
   issues: ScanIssues;
 }
 
-export function IssuesPanel({ issues }: IssuesPanelProps) {
-  const totalIssues =
-    issues.duplicates.length +
-    issues.missingByEnvFile.length +
-    issues.parseErrors.length;
+export const IssuesPanel = memo(function IssuesPanel({ issues }: IssuesPanelProps) {
+  const totalIssues = useMemo(
+    () =>
+      issues.duplicates.length +
+      issues.missingByEnvFile.length +
+      issues.parseErrors.length,
+    [issues]
+  );
 
   if (totalIssues === 0) {
     return (
-      <aside className="w-80 flex-shrink-0 border-r border-border bg-card p-6 shadow-sm animate-in slide-in-from-left duration-500">
-        <div className="flex items-center gap-2 mb-4 animate-in fade-in duration-500 delay-100">
+      <aside className="w-80 flex-shrink-0 border-r border-border bg-card p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-4">
           <h2 className="text-sm font-semibold">Issues</h2>
           <Badge variant="outline" className="bg-success/10 text-success border-success/20 shadow-sm">
             <Check className="mr-1 h-3 w-3" />
@@ -24,8 +28,8 @@ export function IssuesPanel({ issues }: IssuesPanelProps) {
           </Badge>
         </div>
 
-        <div className="rounded-lg bg-success/5 border border-success/20 p-6 text-center shadow-sm animate-in zoom-in duration-500 delay-200">
-          <Check className="mx-auto mb-2 h-8 w-8 text-success animate-in zoom-in duration-500 delay-300" />
+        <div className="rounded-lg bg-success/5 border border-success/20 p-6 text-center shadow-sm">
+          <Check className="mx-auto mb-2 h-8 w-8 text-success" />
           <p className="text-sm font-medium text-success">Looks good!</p>
           <p className="text-xs text-muted-foreground mt-1">No issues detected</p>
         </div>
@@ -34,18 +38,18 @@ export function IssuesPanel({ issues }: IssuesPanelProps) {
   }
 
   return (
-    <aside className="w-80 flex-shrink-0 border-r border-border bg-card overflow-y-auto shadow-sm animate-in slide-in-from-left duration-500">
+    <aside className="w-80 flex-shrink-0 border-r border-border bg-card overflow-y-auto shadow-sm">
       <div className="sticky top-0 bg-card border-b border-border p-4 z-10 shadow-sm">
-        <div className="flex items-center gap-2 animate-in fade-in duration-500 delay-100">
+        <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold">Issues</h2>
-          <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 shadow-sm animate-pulse">
+          <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 shadow-sm">
             <AlertTriangle className="mr-1 h-3 w-3" />
             {totalIssues}
           </Badge>
         </div>
       </div>
 
-      <Accordion type="multiple" defaultValue={["missing", "duplicates"]} className="px-4 animate-in fade-in duration-500 delay-200">
+      <Accordion type="multiple" defaultValue={["missing", "duplicates"]} className="px-4">
         {issues.missingByEnvFile.length > 0 && (
           <AccordionItem value="missing">
             <AccordionTrigger className="text-sm">
@@ -62,8 +66,7 @@ export function IssuesPanel({ issues }: IssuesPanelProps) {
                 {issues.missingByEnvFile.map((item, idx) => (
                   <div
                     key={idx}
-                    className="rounded-md bg-warning/5 border border-warning/20 p-3 shadow-sm hover:shadow-md hover:border-warning/30 transition-all duration-200 animate-in fade-in slide-in-from-bottom-2"
-                    style={{ animationDelay: `${idx * 50}ms` }}
+                    className="rounded-md bg-warning/5 border border-warning/20 p-3 shadow-sm hover:shadow-md hover:border-warning/30 transition-shadow"
                   >
                     <p className="text-xs font-semibold mb-1">{item.file}</p>
                     <div className="space-y-0.5">
@@ -96,8 +99,7 @@ export function IssuesPanel({ issues }: IssuesPanelProps) {
                 {issues.duplicates.map((dup, idx) => (
                   <div
                     key={idx}
-                    className="rounded-md bg-warning/5 border border-warning/20 p-3 shadow-sm hover:shadow-md hover:border-warning/30 transition-all duration-200 animate-in fade-in slide-in-from-bottom-2"
-                    style={{ animationDelay: `${idx * 50}ms` }}
+                    className="rounded-md bg-warning/5 border border-warning/20 p-3 shadow-sm hover:shadow-md hover:border-warning/30 transition-shadow"
                   >
                     <p className="text-xs font-mono font-semibold mb-1">{dup.key}</p>
                     <p className="text-xs text-muted-foreground">Found in: {dup.files.join(", ")}</p>
@@ -124,8 +126,7 @@ export function IssuesPanel({ issues }: IssuesPanelProps) {
                 {issues.parseErrors.map((err, idx) => (
                   <div
                     key={idx}
-                    className="rounded-md bg-destructive/5 border border-destructive/20 p-3 shadow-sm hover:shadow-md hover:border-destructive/30 transition-all duration-200 animate-in fade-in slide-in-from-bottom-2"
-                    style={{ animationDelay: `${idx * 50}ms` }}
+                    className="rounded-md bg-destructive/5 border border-destructive/20 p-3 shadow-sm hover:shadow-md hover:border-destructive/30 transition-shadow"
                   >
                     <p className="text-xs font-mono font-semibold mb-1">{err.file}</p>
                     <p className="text-xs text-muted-foreground">{err.message}</p>
@@ -138,4 +139,4 @@ export function IssuesPanel({ issues }: IssuesPanelProps) {
       </Accordion>
     </aside>
   );
-}
+});

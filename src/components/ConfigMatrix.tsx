@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff } from "lucide-react";
@@ -10,7 +10,7 @@ interface ConfigMatrixProps {
   onRescan?: () => void;
 }
 
-export function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
+export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [revealedSecrets, setRevealedSecrets] = useState<Set<string>>(new Set());
 
@@ -40,16 +40,18 @@ export function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
     return map;
   }, [entries]);
 
-  const toggleReveal = (key: string, file: string) => {
+  const toggleReveal = useCallback((key: string, file: string) => {
     const id = `${key}:${file}`;
-    const newRevealed = new Set(revealedSecrets);
-    if (newRevealed.has(id)) {
-      newRevealed.delete(id);
-    } else {
-      newRevealed.add(id);
-    }
-    setRevealedSecrets(newRevealed);
-  };
+    setRevealedSecrets((prev) => {
+      const newRevealed = new Set(prev);
+      if (newRevealed.has(id)) {
+        newRevealed.delete(id);
+      } else {
+        newRevealed.add(id);
+      }
+      return newRevealed;
+    });
+  }, []);
 
   const maskValue = (value: any): string => {
     const str = String(value ?? "");
@@ -66,9 +68,9 @@ export function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden animate-in fade-in duration-500 delay-100">
+    <div className="flex-1 flex flex-col overflow-hidden">
       {/* Top bar */}
-      <div className="flex items-center gap-4 border-b border-border bg-card px-6 py-3 shadow-sm animate-in slide-in-from-top duration-500 delay-200">
+      <div className="flex items-center gap-4 border-b border-border bg-card px-6 py-3 shadow-sm">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -80,7 +82,7 @@ export function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
         </div>
 
         {onRescan && (
-          <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all group">
+          <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-transform group">
             <RefreshCw className="h-4 w-4 group-active:animate-spin" />
             Rescan
           </Button>
@@ -119,8 +121,7 @@ export function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
                 return (
                   <tr
                     key={keyIdx}
-                    className={`${keyIdx % 2 === 0 ? "bg-background" : "bg-muted/30"} hover:bg-accent/50 transition-colors animate-in fade-in duration-300`}
-                    style={{ animationDelay: `${keyIdx * 30}ms` }}
+                    className={`${keyIdx % 2 === 0 ? "bg-background" : "bg-muted/30"} hover:bg-accent/50 transition-colors`}
                   >
                     <td className="px-6 py-3 text-sm font-mono font-medium text-foreground">{key}</td>
                     {files.map((file, fileIdx) => {
@@ -145,16 +146,16 @@ export function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
                         <td key={fileIdx} className="px-6 py-3 text-sm">
                           <button
                             onClick={() => isSecret ? toggleReveal(key, file.path) : undefined}
-                            className="flex items-center gap-2 text-success hover:text-success/80 transition-all hover:scale-105 active:scale-95"
+                            className="flex items-center gap-2 text-success hover:text-success/80 transition-transform hover:scale-105 active:scale-95"
                           >
                             {isRevealed ? (
                               <>
-                                <Eye className="h-4 w-4 transition-transform" />
+                                <Eye className="h-4 w-4" />
                                 <span className="font-mono text-xs">{displayValue}</span>
                               </>
                             ) : (
                               <>
-                                {isSecret ? <EyeOff className="h-4 w-4 transition-transform" /> : <Check className="h-4 w-4 transition-transform" />}
+                                {isSecret ? <EyeOff className="h-4 w-4" /> : <Check className="h-4 w-4" />}
                                 <span className="font-mono text-xs">{displayValue}</span>
                               </>
                             )}
@@ -171,4 +172,4 @@ export function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
       </div>
     </div>
   );
-}
+});
