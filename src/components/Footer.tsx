@@ -1,6 +1,7 @@
 import { memo, useState } from "react";
 import { FileDown, ExternalLink, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,10 +48,15 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent" title="Choose export format">
-                {formatLabels[exportFormat]}
-                <ChevronDown className="h-3 w-3" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                    {formatLabels[exportFormat]}
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Choose export format</TooltipContent>
+              </Tooltip>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Export Format</DropdownMenuLabel>
@@ -63,14 +69,18 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            onClick={() => onExport(exportFormat)}
-            className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform export-button"
-            title="Export config template (⌘E / Ctrl+E)"
-          >
-            <FileDown className="h-4 w-4" />
-            Export Template
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => onExport(exportFormat)}
+                className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform export-button"
+              >
+                <FileDown className="h-4 w-4" />
+                Export Template
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Export config template (⌘E / Ctrl+E)</TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </footer>

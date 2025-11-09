@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff, Copy, Columns, Files, FileSearch, SearchX } from "lucide-react";
 import { toast } from "sonner";
 import type { NormalizedEntry, DiscoveredFile } from "../types";
@@ -168,10 +169,15 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2 bg-transparent" title="Show/hide file columns">
-              <Columns className="h-4 w-4" />
-              Columns ({activeFiles.length}/{files.length})
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                  <Columns className="h-4 w-4" />
+                  Columns ({activeFiles.length}/{files.length})
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Show/hide file columns</TooltipContent>
+            </Tooltip>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
@@ -196,10 +202,15 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
         </DropdownMenu>
 
         {onRescan && (
-          <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group" title="Rescan project (⌘R / Ctrl+R)">
-            <RefreshCw className="h-4 w-4 group-active:animate-spin" />
-            Rescan
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group">
+                <RefreshCw className="h-4 w-4 group-active:animate-spin" />
+                Rescan
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Rescan project (⌘R / Ctrl+R)</TooltipContent>
+          </Tooltip>
         )}
       </div>
 
@@ -229,15 +240,19 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="truncate">{file.path}</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 opacity-60 hover:opacity-100 flex-shrink-0"
-                      onClick={() => copyAllFromFile(file.path)}
-                      title="Copy all values from this file"
-                    >
-                      <Files className="h-3 w-3" />
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 opacity-60 hover:opacity-100 flex-shrink-0"
+                          onClick={() => copyAllFromFile(file.path)}
+                        >
+                          <Files className="h-3 w-3" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Copy all values from this file</TooltipContent>
+                    </Tooltip>
                   </div>
                 </th>
               ))}
@@ -288,30 +303,45 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                       return (
                         <td key={fileIdx} className="px-6 py-3 text-sm">
                           <div className="flex items-center gap-2 group">
-                            <button
-                              onClick={() => isSecret ? toggleReveal(key, file.path) : undefined}
-                              className="flex items-center gap-2 text-success hover:text-success/80"
-                              title={isSecret ? "Click to reveal/hide secret value" : undefined}
-                            >
-                              {isRevealed ? (
-                                <>
-                                  <Eye className="h-4 w-4" />
-                                  <span className="font-mono text-xs">{displayValue}</span>
-                                </>
-                              ) : (
-                                <>
-                                  {isSecret ? <EyeOff className="h-4 w-4" /> : <Check className="h-4 w-4" />}
-                                  <span className="font-mono text-xs">{displayValue}</span>
-                                </>
-                              )}
-                            </button>
-                            <button
-                              onClick={() => copyToClipboard(String(entry.value ?? ""), key)}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-accent"
-                              title="Copy value"
-                            >
-                              <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                            </button>
+                            {isSecret ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button
+                                    onClick={() => toggleReveal(key, file.path)}
+                                    className="flex items-center gap-2 text-success hover:text-success/80"
+                                  >
+                                    {isRevealed ? (
+                                      <>
+                                        <Eye className="h-4 w-4" />
+                                        <span className="font-mono text-xs">{displayValue}</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <EyeOff className="h-4 w-4" />
+                                        <span className="font-mono text-xs">{displayValue}</span>
+                                      </>
+                                    )}
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent>Click to reveal/hide secret value</TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <button className="flex items-center gap-2 text-success hover:text-success/80">
+                                <Check className="h-4 w-4" />
+                                <span className="font-mono text-xs">{displayValue}</span>
+                              </button>
+                            )}
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => copyToClipboard(String(entry.value ?? ""), key)}
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-accent"
+                                >
+                                  <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Copy value</TooltipContent>
+                            </Tooltip>
                           </div>
                         </td>
                       );
