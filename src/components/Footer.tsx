@@ -47,7 +47,7 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent" title="Choose export format">
                 {formatLabels[exportFormat]}
                 <ChevronDown className="h-3 w-3" />
               </Button>
@@ -63,7 +63,11 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button onClick={() => onExport(exportFormat)} className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform export-button">
+          <Button
+            onClick={() => onExport(exportFormat)}
+            className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform export-button"
+            title="Export config template (⌘E / Ctrl+E)"
+          >
             <FileDown className="h-4 w-4" />
             Export Template
           </Button>

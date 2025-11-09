@@ -168,7 +168,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+            <Button variant="outline" size="sm" className="gap-2 bg-transparent" title="Show/hide file columns">
               <Columns className="h-4 w-4" />
               Columns ({activeFiles.length}/{files.length})
             </Button>
@@ -196,7 +196,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
         </DropdownMenu>
 
         {onRescan && (
-          <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group">
+          <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group" title="Rescan project (⌘R / Ctrl+R)">
             <RefreshCw className="h-4 w-4 group-active:animate-spin" />
             Rescan
           </Button>
@@ -291,6 +291,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                             <button
                               onClick={() => isSecret ? toggleReveal(key, file.path) : undefined}
                               className="flex items-center gap-2 text-success hover:text-success/80"
+                              title={isSecret ? "Click to reveal/hide secret value" : undefined}
                             >
                               {isRevealed ? (
                                 <>

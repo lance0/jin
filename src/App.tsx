@@ -298,7 +298,7 @@ function App() {
     return (
       <>
         <WelcomeScreen onChooseFolder={handleChooseFolder} />
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-right" richColors closeButton />
       </>
     );
   }
@@ -328,7 +328,7 @@ function App() {
         onExport={handleExport}
       />
 
-      <Toaster position="top-right" richColors />
+      <Toaster position="top-right" richColors closeButton />
 
       <OnboardingTour isOpen={isTourOpen} onClose={handleTourClose} />
 

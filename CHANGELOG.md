@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance warning banner** when displaying 200+ config keys
 - **Semaphore-based concurrency limiting** (16 concurrent file operations) to prevent file descriptor exhaustion
 - **In-memory file caching** with modification time tracking for 70-90% faster rescans
+- **Toast close buttons** - users can now dismiss toast notifications manually
+- **Comprehensive tooltips** on all icon buttons and interactive elements
+- **Updated onboarding tour** with file watching feature explanation
 
 ### Changed
 - **MAJOR PERFORMANCE IMPROVEMENTS**: Theme switching and overall responsiveness drastically improved

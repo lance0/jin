@@ -45,6 +45,11 @@ const TOUR_STEPS: TourStep[] = [
     position: "top",
   },
   {
+    title: "File Watching",
+    description: "Toggle the eye icon in the header to enable automatic rescanning when your config files change. Perfect for development workflows! When enabled, Jin will watch for changes and update automatically.",
+    position: "center",
+  },
+  {
     title: "Keyboard Shortcuts",
     description: "Use Cmd/Ctrl+O to open a folder, Cmd/Ctrl+R to rescan, and Cmd/Ctrl+E to export. Check the About dialog for more shortcuts!",
     position: "center",

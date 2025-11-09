@@ -29,7 +29,13 @@ export const Header = memo(function Header({ projectPath, onProjectChange, onRes
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={onProjectChange} className="gap-2 hover:scale-105 active:scale-95 transition-transform">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onProjectChange}
+            className="gap-2 hover:scale-105 active:scale-95 transition-transform"
+            title="Change project folder (⌘O / Ctrl+O)"
+          >
             <FolderOpen className="h-4 w-4" />
             <span className="max-w-xs truncate text-sm font-mono text-muted-foreground">{projectPath}</span>
           </Button>
@@ -57,6 +63,7 @@ export const Header = memo(function Header({ projectPath, onProjectChange, onRes
           onClick={() => setAboutOpen(true)}
           aria-label="About Jin"
           className="hover:scale-110 active:scale-95 transition-transform"
+          title="About Jin"
         >
           <Info className="h-5 w-5" />
         </Button>
@@ -67,6 +74,7 @@ export const Header = memo(function Header({ projectPath, onProjectChange, onRes
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           aria-label="Toggle theme"
           className="hover:scale-110 active:scale-95 transition-transform"
+          title="Toggle theme"
         >
           <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />

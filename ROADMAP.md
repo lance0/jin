@@ -71,6 +71,9 @@
 - [x] Copy all values from file button (completed)
 - [x] Empty state illustrations (completed)
 - [x] Onboarding tour (completed)
+- [x] Toast close buttons (completed)
+- [x] Comprehensive tooltips on all interactive elements (completed)
+- [x] Updated onboarding tour with file watching (completed)
 
 ---
 
