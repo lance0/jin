@@ -34,7 +34,6 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "identifier": "com.jin.configwhisperer",
     "publisher": "lance0",
     "category": "DeveloperTool",
     "shortDescription": "Config file management made easy",

@@ -41,40 +41,27 @@ async fn scan_folder(
             // Acquire semaphore permit (limits concurrency)
             let _permit = sem.acquire().await.unwrap();
 
-            // Check cache first - get file modification time
-            let file_metadata = match tokio::fs::metadata(&file_path).await {
-                Ok(meta) => meta,
-                Err(e) => {
-                    return Err(ParseError {
-                        file: file_path,
-                        message: format!("Failed to read file metadata: {}", e),
-                    });
-                }
+            // Try to get file metadata for caching - if it fails, just skip caching
+            let modified_time_opt = match tokio::fs::metadata(&file_path).await {
+                Ok(metadata) => metadata.modified().ok(),
+                Err(_) => None,
             };
 
-            let modified_time = match file_metadata.modified() {
-                Ok(time) => time,
-                Err(e) => {
-                    return Err(ParseError {
-                        file: file_path,
-                        message: format!("Failed to get modification time: {}", e),
-                    });
-                }
-            };
-
-            // Check if we have a cached version
-            if let Some(cached) = cache.get(&file_path) {
-                // If modification time matches, use cached entries
-                if cached.modified_time == modified_time {
-                    return Ok(cached.entries);
+            // Check cache if we have a modification time
+            if let Some(modified_time) = modified_time_opt {
+                if let Some(cached) = cache.get(&file_path) {
+                    // If modification time matches, use cached entries
+                    if cached.modified_time == modified_time {
+                        return Ok(cached.entries);
+                    }
                 }
             }
 
-            // Cache miss or file changed - parse the file
+            // Cache miss, file changed, or no metadata - parse the file
             let result = parse_file(&path_clone, &file_path, &file_format).await;
 
-            // Update cache if parsing succeeded
-            if let Ok(ref entries) = result {
+            // Update cache if parsing succeeded and we have a modification time
+            if let (Ok(ref entries), Some(modified_time)) = (&result, modified_time_opt) {
                 cache.insert(
                     file_path.clone(),
                     FileCache {

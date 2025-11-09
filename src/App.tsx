@@ -35,6 +35,15 @@ function App() {
   const isWatching = useFileWatcher((state) => state.isWatching);
   const setWatching = useFileWatcher((state) => state.setWatching);
 
+  // Calculate issue count
+  const issueCount = useMemo(
+    () =>
+      issues.duplicates.length +
+      issues.missingByEnvFile.length +
+      issues.parseErrors.length,
+    [issues]
+  );
+
   const scanFolder = useCallback(async (path: string) => {
     try {
       setIsScanning(true);
@@ -315,13 +324,7 @@ function App() {
       </div>
 
       <Footer
-        issueCount={useMemo(
-          () =>
-            issues.duplicates.length +
-            issues.missingByEnvFile.length +
-            issues.parseErrors.length,
-          [issues]
-        )}
+        issueCount={issueCount}
         onExport={handleExport}
       />
 

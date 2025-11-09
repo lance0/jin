@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed expensive CSS transitions from table elements (hundreds of cells)
 - Removed gradient text effects and backdrop-blur for better performance
 - Optimized ConfigMatrix component to eliminate animation overhead
+- HTML page title updated to "Jin – The Config Whisperer"
 
 ### Fixed
 - Loading state properly resets after scan completes or fails
@@ -52,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - UI remains responsive during large folder scans
 - Dialog component structure fixed to prevent blank screens
 - DropdownMenu items corrected (MenuItem vs CheckboxItem)
+- React Hooks order violation in App.tsx that caused blank screen
+- Duplicate identifier field removed from tauri.conf.json
 
 ### Distribution
 - Production build configuration with bundle enabled
