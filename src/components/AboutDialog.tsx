@@ -8,31 +8,34 @@ import {
 } from "./ui/dialog";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import { Button } from "./ui/button";
+import { PlayCircle } from "lucide-react";
 
 interface AboutDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onRestartTour: () => void;
 }
 
-export const AboutDialog = memo(function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
+export const AboutDialog = memo(function AboutDialog({ open, onOpenChange, onRestartTour }: AboutDialogProps) {
   const version = "1.0.0"; // TODO: Get from package.json or Tauri config
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <div className="flex items-center justify-center mb-4">
-            <div className="text-6xl animate-in zoom-in duration-500" role="img" aria-label="Hedgehog">
-              🦔
-            </div>
+      <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
+        <div className="flex items-center justify-center mb-2">
+          <div className="text-4xl" role="img" aria-label="Hedgehog">
+            🦔
           </div>
-          <DialogTitle className="text-center text-2xl">Jin</DialogTitle>
-          <DialogDescription className="text-center">
+        </div>
+        <DialogHeader>
+          <DialogTitle className="text-center text-xl">Jin</DialogTitle>
+          <DialogDescription className="text-center text-sm">
             Config File Guardian
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 text-sm">
+        <div className="space-y-3 text-sm">
           {/* Version */}
           <div className="flex items-center justify-center gap-2">
             <Badge variant="outline">v{version}</Badge>
@@ -47,13 +50,12 @@ export const AboutDialog = memo(function AboutDialog({ open, onOpenChange }: Abo
           <Separator />
 
           {/* Memorial */}
-          <div className="bg-muted/50 rounded-lg p-4 text-center space-y-2">
+          <div className="bg-muted/50 rounded-lg p-3 text-center space-y-1.5">
             <p className="text-sm font-medium text-foreground">
               In loving memory of Jin
             </p>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              This app is dedicated to Jin the hedgehog, who brought joy and warmth to everyone around them.
-              May your variables always be cozy. 🦔💚
+            <p className="text-xs text-muted-foreground leading-snug">
+              Dedicated to Jin the hedgehog, who brought joy and warmth to everyone. May your variables always be cozy. 🦔💚
             </p>
             <p className="text-xs text-muted-foreground italic">
               2019 - 2025
@@ -63,22 +65,21 @@ export const AboutDialog = memo(function AboutDialog({ open, onOpenChange }: Abo
           <Separator />
 
           {/* Description */}
-          <div className="space-y-2">
-            <h4 className="font-semibold text-foreground">What is Jin?</h4>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Jin helps you manage configuration files across your projects. Scan folders for .env, YAML, JSON,
-              and TOML files, detect inconsistencies, and export template files—all locally on your machine.
+          <div className="space-y-1">
+            <h4 className="font-semibold text-foreground text-sm">What is Jin?</h4>
+            <p className="text-xs text-muted-foreground leading-snug">
+              Manage configuration files across your projects. Scan for .env, YAML, JSON, and TOML files, detect inconsistencies, and export templates—all locally.
             </p>
           </div>
 
           <Separator />
 
           {/* Features */}
-          <div className="space-y-2">
-            <h4 className="font-semibold text-foreground">Features</h4>
-            <ul className="text-xs text-muted-foreground space-y-1 pl-4">
+          <div className="space-y-1">
+            <h4 className="font-semibold text-foreground text-sm">Features</h4>
+            <ul className="text-xs text-muted-foreground space-y-0.5 pl-4">
               <li>• Multi-format support (.env, YAML, JSON, TOML)</li>
-              <li>• Issue detection (missing keys, duplicates, parse errors)</li>
+              <li>• Issue detection (missing keys, duplicates, errors)</li>
               <li>• Secret masking and click-to-reveal</li>
               <li>• Export templates in multiple formats</li>
               <li>• 100% local - no data leaves your machine</li>
@@ -87,21 +88,40 @@ export const AboutDialog = memo(function AboutDialog({ open, onOpenChange }: Abo
 
           <Separator />
 
+          {/* Onboarding Tour */}
+          <div className="space-y-1">
+            <h4 className="font-semibold text-foreground text-sm">Need Help?</h4>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full gap-2"
+              onClick={() => {
+                onOpenChange(false);
+                onRestartTour();
+              }}
+            >
+              <PlayCircle className="h-4 w-4" />
+              Restart Onboarding Tour
+            </Button>
+          </div>
+
+          <Separator />
+
           {/* Keyboard Shortcuts */}
-          <div className="space-y-2">
-            <h4 className="font-semibold text-foreground">Keyboard Shortcuts</h4>
-            <div className="text-xs text-muted-foreground space-y-1">
-              <div className="flex justify-between">
+          <div className="space-y-1">
+            <h4 className="font-semibold text-foreground text-sm">Keyboard Shortcuts</h4>
+            <div className="text-xs text-muted-foreground space-y-0.5">
+              <div className="flex justify-between items-center">
                 <span>Open project</span>
-                <kbd className="px-2 py-0.5 rounded bg-muted font-mono text-xs">⌘O / Ctrl+O</kbd>
+                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono text-[10px]">⌘O / Ctrl+O</kbd>
               </div>
-              <div className="flex justify-between">
-                <span>Rescan project</span>
-                <kbd className="px-2 py-0.5 rounded bg-muted font-mono text-xs">⌘R / Ctrl+R</kbd>
+              <div className="flex justify-between items-center">
+                <span>Rescan</span>
+                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono text-[10px]">⌘R / Ctrl+R</kbd>
               </div>
-              <div className="flex justify-between">
-                <span>Export template</span>
-                <kbd className="px-2 py-0.5 rounded bg-muted font-mono text-xs">⌘E / Ctrl+E</kbd>
+              <div className="flex justify-between items-center">
+                <span>Export</span>
+                <kbd className="px-1.5 py-0.5 rounded bg-muted font-mono text-[10px]">⌘E / Ctrl+E</kbd>
               </div>
             </div>
           </div>

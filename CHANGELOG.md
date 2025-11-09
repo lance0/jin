@@ -11,6 +11,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Click-to-reveal for masked secrets in config matrix
 - Rescan button for quick folder re-scanning
 - Loading states with proper state management
+- Drag-and-drop folder selection
+- File column show/hide toggles in config matrix
+- Keyboard shortcuts (Cmd/Ctrl+O for open, Cmd/Ctrl+R for rescan, Cmd/Ctrl+E for export)
+- Export location chooser (save dialog)
+- Copy individual values to clipboard
+- Export to multiple formats (JSON, YAML, .env)
+- Custom hedgehog app icon
+- About modal with Jin memorial and app information
+- Celebration UI when no issues are found (gradient card with sparkles)
+- Skeleton loading screen that mimics the actual layout
+- "Copy All" button in file column headers to copy all key-value pairs
+- Compact About dialog optimized for smaller windows
+- Empty state illustrations for "no config files" and "no search results" screens
+- Interactive onboarding tour for first-time users with step-by-step guidance
+- "Restart Onboarding Tour" button in About dialog
+- **Live file watching** with automatic rescanning when config files change
+- Auto-watch toggle button in header with visual indicator
+- Debounced file watching (1-second delay) to prevent excessive rescans
 
 ### Changed
 - **MAJOR PERFORMANCE IMPROVEMENTS**: Theme switching and overall responsiveness drastically improved
@@ -29,12 +47,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Main thread no longer blocks during file operations
 - Theme switching is now instant instead of laggy
 - UI remains responsive during large folder scans
+- Dialog component structure fixed to prevent blank screens
+- DropdownMenu items corrected (MenuItem vs CheckboxItem)
 
-### Planned
-- Drag-and-drop folder selection
-- File column show/hide toggles
-- Keyboard shortcuts
-- Virtual scrolling for large datasets
+### Distribution
+- Production build configuration with bundle enabled
+- macOS DMG and app bundle support
+- Windows MSI and NSIS installer support
+- Linux DEB and AppImage support
+- Code signing placeholders for macOS and Windows
+- Comprehensive distribution guide (DISTRIBUTION.md)
+
+### Planned for Future Releases
+- Virtual scrolling for large datasets (500+ keys)
+- Two-file diff view for comparing configs
+- Auto-update mechanism
+- Homebrew formula
+- App Store distribution
 
 ## [0.1.0] - 2025-01-09
 
@@ -88,9 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Limitations
 - No live file watching (manual rescan required)
 - No custom ignore patterns (uses hardcoded list)
-- Basic error messages
 - No undo functionality
-- Icons are placeholder (not custom hedgehog theme yet)
 
 ---
 

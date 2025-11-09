@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { FolderOpen, Moon, Sun, Info } from "lucide-react"
+import { FolderOpen, Moon, Sun, Info, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 import { AboutDialog } from "./AboutDialog"
@@ -7,9 +7,12 @@ import { AboutDialog } from "./AboutDialog"
 interface HeaderProps {
   projectPath: string
   onProjectChange: () => void
+  onRestartTour: () => void
+  isWatching: boolean
+  onToggleWatch: () => void
 }
 
-export const Header = memo(function Header({ projectPath, onProjectChange }: HeaderProps) {
+export const Header = memo(function Header({ projectPath, onProjectChange, onRestartTour, isWatching, onToggleWatch }: HeaderProps) {
   const { theme, setTheme } = useTheme()
   const [aboutOpen, setAboutOpen] = useState(false)
 
@@ -35,6 +38,20 @@ export const Header = memo(function Header({ projectPath, onProjectChange }: Hea
 
       <div className="flex items-center gap-2">
         <Button
+          variant={isWatching ? "default" : "ghost"}
+          size="icon"
+          onClick={onToggleWatch}
+          aria-label={isWatching ? "Stop watching files" : "Watch files for changes"}
+          className="hover:scale-110 active:scale-95 transition-transform relative"
+          title={isWatching ? "Auto-rescan enabled" : "Click to enable auto-rescan"}
+        >
+          {isWatching ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+          {isWatching && (
+            <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-success rounded-full animate-pulse" />
+          )}
+        </Button>
+
+        <Button
           variant="ghost"
           size="icon"
           onClick={() => setAboutOpen(true)}
@@ -56,7 +73,7 @@ export const Header = memo(function Header({ projectPath, onProjectChange }: Hea
         </Button>
       </div>
 
-      <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
+      <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} onRestartTour={onRestartTour} />
     </header>
   )
 })

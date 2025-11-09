@@ -19,7 +19,8 @@ Jin is a cross-platform desktop application that scans your project for configur
 ### 🔐 **Secret Detection**
 - Automatically identifies sensitive values (passwords, tokens, API keys)
 - Masks secrets in the UI for privacy
-- Click-to-reveal individual secret values
+- Click-to-reveal individual secret values with eye icon
+- Copy individual values to clipboard
 - Warns about sensitive keys in exported files
 
 ### 🚨 **Issue Detection**
@@ -29,22 +30,35 @@ Jin is a cross-platform desktop application that scans your project for configur
 
 ### 📊 **Visual Matrix**
 - See all keys and their presence across files at a glance
-- Search and filter keys
+- Search and filter keys in real-time
+- Show/hide individual file columns
+- Copy individual values or entire file configs
 - View values with type inference (string, number, boolean, null)
-- Responsive table with hover states
+- Responsive table with optimized performance
 
 ### 📤 **Export Clean Configs**
-- One-click export to `.env.example`
-- Includes type hints as comments
+- Export to multiple formats: `.env`, `JSON`, or `YAML`
+- Choose save location with file picker
+- Includes type hints as comments (.env format)
 - Alphabetically sorted keys
 - Blank values ready for your team to fill in
 
 ### 🎨 **Polished UI**
-- Dark and light themes
+- Dark and light themes with instant switching
 - Smooth animations and transitions
-- Toast notifications
-- Keyboard-friendly
-- Responsive design
+- Toast notifications for all actions
+- Comprehensive keyboard shortcuts (⌘O, ⌘R, ⌘E)
+- Interactive onboarding tour for new users
+- Empty state illustrations
+- Skeleton loading screens
+- Fully responsive design
+
+### 👁️ **Live File Watching**
+- Toggle auto-watch to monitor config files for changes
+- Automatic rescanning when files are modified
+- Debounced updates (1-second delay)
+- Visual indicator when watching is active
+- Notifications when changes are detected
 
 ---
 
@@ -57,14 +71,12 @@ Jin is a cross-platform desktop application that scans your project for configur
 
 ### Installation
 
-#### Option 1: Download Pre-built Binary (Coming Soon)
-```bash
-# macOS (Homebrew)
-brew install jin-config
+#### Option 1: Download Release (Recommended)
 
-# Or download from Releases page
-# https://github.com/yourusername/jin/releases
-```
+Download the latest release for your platform:
+- **macOS**: Download `.dmg` installer from [Releases](https://github.com/yourusername/jin/releases)
+- **Windows**: Download `.msi` or `.exe` installer (coming soon)
+- **Linux**: Download `.deb` or `.AppImage` (coming soon)
 
 #### Option 2: Build from Source
 
@@ -84,9 +96,11 @@ npm install
 # Run in development mode
 npm run dev
 
-# Or build for production
-npm run build
+# Build for production (creates installers)
+npm run tauri build
 ```
+
+Built installers will be in `src-tauri/target/release/bundle/`
 
 ---
 
@@ -94,23 +108,39 @@ npm run build
 
 ### 1. Choose a Project Folder
 - Click **"Choose a project folder"** on the welcome screen
-- Or drag and drop a folder (coming soon)
+- Or use keyboard shortcut: **⌘O** (Mac) / **Ctrl+O** (Windows/Linux)
+- Drag and drop folder into the app window
 
 ### 2. Review Issues
 - Check the **Issues Panel** on the left for:
   - Missing keys in `.env` files
   - Duplicate keys across files
   - Parse errors
+- Celebrate when you see "All Clear!" 🎉
 
 ### 3. Inspect the Matrix
 - Use the **Config Matrix** to see which keys exist in which files
-- Search for specific keys
-- Click to reveal masked secret values
+- **Search** for specific keys in the search bar
+- **Toggle columns** to show/hide specific config files
+- **Click eye icon** to reveal masked secret values
+- **Click copy icon** to copy individual values
+- **Copy all** values from a file using the header button
 
-### 4. Export `.env.example`
-- Click **"Export .env.example"** in the footer
-- File is saved to your project root
+### 4. Enable Auto-Watch (Optional)
+- Click the **eye icon** in the header to enable file watching
+- Jin will automatically rescan when config files change
+- Green pulsing dot indicates watching is active
+
+### 5. Export Template
+- Click **"Export Template"** in the footer
+- Select format: `.env`, `JSON`, or `YAML`
+- Choose save location
 - Share with your team!
+
+### Keyboard Shortcuts
+- **⌘O / Ctrl+O**: Open folder picker
+- **⌘R / Ctrl+R**: Rescan current project
+- **⌘E / Ctrl+E**: Export template
 
 ---
 
@@ -127,10 +157,11 @@ npm run build
 
 ### Backend
 - **Tauri 2**: Desktop framework
-- **Rust**: Native backend
+- **Rust**: Native backend with async/await (Tokio)
+- **notify**: File system watching with debouncing
 - **walkdir**: Directory traversal
 - **serde**: Serialization
-- **YAML/JSON/TOML parsers**
+- **YAML/JSON/TOML parsers**: Multi-format support
 
 ---
 
@@ -157,9 +188,12 @@ jin-tauri/
 │   │   ├── Header.tsx
 │   │   ├── IssuesPanel.tsx
 │   │   ├── ConfigMatrix.tsx
-│   │   └── Footer.tsx
+│   │   ├── Footer.tsx
+│   │   ├── AboutDialog.tsx
+│   │   └── OnboardingTour.tsx
 │   ├── store/              # Zustand state
-│   │   └── useScan.ts
+│   │   ├── useScan.ts
+│   │   └── useFileWatcher.ts
 │   ├── lib/                # Utilities
 │   │   └── utils.ts
 │   ├── types.ts            # TypeScript types
@@ -170,11 +204,14 @@ jin-tauri/
 │   │   ├── scanner.rs      # File discovery
 │   │   ├── parser.rs       # Config parsing
 │   │   ├── analyzer.rs     # Issue detection
-│   │   ├── exporter.rs     # .env.example generation
+│   │   ├── exporter.rs     # Multi-format export
+│   │   ├── watcher.rs      # File watching
 │   │   └── types.rs        # Rust types
 │   └── Cargo.toml          # Rust dependencies
 ├── ROADMAP.md              # Future plans
 ├── CHANGELOG.md            # Version history
+├── DISTRIBUTION.md         # Distribution guide
+├── LICENSE                 # MIT License
 └── package.json            # npm config
 ```
 
@@ -185,22 +222,31 @@ jin-tauri/
 See [ROADMAP.md](./ROADMAP.md) for detailed plans.
 
 ### MVP ✅ (Completed)
-- Folder scanning
-- Multi-format parsing
-- Issue detection
-- Export functionality
-- Basic UI
+- Folder scanning with smart ignore patterns
+- Multi-format parsing (.env, YAML, JSON, TOML)
+- Issue detection (missing keys, duplicates, parse errors)
+- Export to multiple formats
+- Polished UI with dark/light themes
 
-### Phase 2 🚧 (In Progress)
-- Drag-and-drop
-- Custom ignore patterns
-- Keyboard shortcuts
-- Improved mobile responsiveness
+### Phase 2 ✅ (Completed)
+- Performance optimization (async Rust backend)
+- Interactive onboarding tour
+- Keyboard shortcuts (⌘O, ⌘R, ⌘E)
+- Copy to clipboard features
+- Column visibility toggles
+- Empty state illustrations
+- Skeleton loading screens
 
-### Phase 3 🔮 (Future)
-- Live file watching
+### Phase 3 ✅ (Completed)
+- **Live file watching** with auto-rescan
+- Production build configuration
+- Distribution ready (DMG, MSI, DEB, AppImage)
+
+### Future 🔮
 - Two-file diff view
 - JSON Schema validation
+- Auto-update mechanism
+- Homebrew formula
 - Plugin system
 - CLI companion
 
@@ -225,12 +271,14 @@ npm install
 # Run dev server (auto-reloads on changes)
 npm run dev
 
-# Build for production
-npm run build
+# Build for production (creates installers)
+npm run tauri build
 
 # Lint code
 npm run lint
 ```
+
+See [DISTRIBUTION.md](./DISTRIBUTION.md) for detailed build and distribution instructions.
 
 ---
 

@@ -6,12 +6,14 @@ mod exporter;
 mod parser;
 mod scanner;
 mod types;
+mod watcher;
 
 use analyzer::analyze_entries;
 use exporter::export_env_example;
 use parser::parse_file;
 use scanner::scan_directory;
 use types::{ExportFormat, NormalizedEntry, ParseError, ScanResult, ScanSummary};
+use watcher::{FileWatcherState, start_watching, stop_watching, get_watching_status};
 
 #[tauri::command]
 async fn scan_folder(path: String) -> Result<ScanResult, String> {
@@ -80,12 +82,38 @@ async fn export_env_example_cmd(output_path: String, entries: Vec<NormalizedEntr
     export_env_example(&output_path, &entries, format).await
 }
 
+#[tauri::command]
+fn start_file_watching(
+    app_handle: tauri::AppHandle,
+    path: String,
+    state: tauri::State<'_, FileWatcherState>,
+) -> Result<(), String> {
+    start_watching(app_handle, path, state)
+}
+
+#[tauri::command]
+fn stop_file_watching(state: tauri::State<'_, FileWatcherState>) -> Result<(), String> {
+    stop_watching(state)
+}
+
+#[tauri::command]
+fn get_file_watching_status(state: tauri::State<'_, FileWatcherState>) -> (bool, Option<String>) {
+    get_watching_status(state)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![scan_folder, export_env_example_cmd])
+        .manage(FileWatcherState::new())
+        .invoke_handler(tauri::generate_handler![
+            scan_folder,
+            export_env_example_cmd,
+            start_file_watching,
+            stop_file_watching,
+            get_file_watching_status
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 import { Badge } from "./ui/badge";
-import { AlertTriangle, FileWarning, Check } from "lucide-react";
+import { AlertTriangle, FileWarning, Check, Sparkles } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import type { ScanIssues } from "../types";
 
@@ -19,7 +19,7 @@ export const IssuesPanel = memo(function IssuesPanel({ issues }: IssuesPanelProp
 
   if (totalIssues === 0) {
     return (
-      <aside className="w-80 flex-shrink-0 border-r border-border bg-card p-6 shadow-sm">
+      <aside className="w-80 flex-shrink-0 border-r border-border bg-card p-6 shadow-sm issues-panel">
         <div className="flex items-center gap-2 mb-4">
           <h2 className="text-sm font-semibold">Issues</h2>
           <Badge variant="outline" className="bg-success/10 text-success border-success/20 shadow-sm">
@@ -28,17 +28,31 @@ export const IssuesPanel = memo(function IssuesPanel({ issues }: IssuesPanelProp
           </Badge>
         </div>
 
-        <div className="rounded-lg bg-success/5 border border-success/20 p-6 text-center shadow-sm">
-          <Check className="mx-auto mb-2 h-8 w-8 text-success" />
-          <p className="text-sm font-medium text-success">Looks good!</p>
-          <p className="text-xs text-muted-foreground mt-1">No issues detected</p>
+        <div className="space-y-4">
+          {/* Celebration card */}
+          <div className="rounded-lg bg-gradient-to-br from-success/10 via-success/5 to-transparent border border-success/30 p-6 text-center shadow-sm">
+            <div className="relative inline-block mb-3">
+              <Check className="h-12 w-12 text-success" />
+              <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-success animate-pulse" />
+            </div>
+            <p className="text-base font-semibold text-success mb-1">All Clear!</p>
+            <p className="text-sm text-foreground/80 mb-2">Your configs are in perfect harmony</p>
+            <p className="text-xs text-muted-foreground">No duplicates, no missing keys, no errors</p>
+          </div>
+
+          {/* Fun tip */}
+          <div className="rounded-lg bg-muted/30 border border-border/50 p-4 text-center">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Keep your variables cozy and your configs tidy!
+            </p>
+          </div>
         </div>
       </aside>
     );
   }
 
   return (
-    <aside className="w-80 flex-shrink-0 border-r border-border bg-card overflow-y-auto shadow-sm">
+    <aside className="w-80 flex-shrink-0 border-r border-border bg-card overflow-y-auto shadow-sm issues-panel">
       <div className="sticky top-0 bg-card border-b border-border p-4 z-10 shadow-sm">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold">Issues</h2>

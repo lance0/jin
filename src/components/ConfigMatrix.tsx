@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff, Copy, Columns } from "lucide-react";
+import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff, Copy, Columns, Files, FileSearch, SearchX } from "lucide-react";
 import { toast } from "sonner";
 import type { NormalizedEntry, DiscoveredFile } from "../types";
 import {
@@ -104,6 +104,23 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
     }
   }, []);
 
+  const copyAllFromFile = useCallback(async (filePath: string) => {
+    try {
+      // Get all entries from this file
+      const fileEntries = entries.filter(e => e.sourceFile === filePath);
+
+      // Format as KEY=VALUE lines
+      const content = fileEntries
+        .map(e => `${e.key}=${e.value ?? ''}`)
+        .join('\n');
+
+      await navigator.clipboard.writeText(content);
+      toast.success(`Copied ${fileEntries.length} values from ${filePath.split('/').pop()}`);
+    } catch (err) {
+      toast.error("Failed to copy to clipboard");
+    }
+  }, [entries]);
+
   const maskValue = (value: any): string => {
     const str = String(value ?? "");
     if (str.length <= 4) return "****";
@@ -113,16 +130,33 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
   if (files.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
-        <p className="text-muted-foreground">No config files found</p>
+        <div className="text-center space-y-4 max-w-md">
+          <div className="flex justify-center">
+            <div className="rounded-full bg-muted p-6">
+              <FileSearch className="h-12 w-12 text-muted-foreground" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-foreground">No Config Files Found</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              This folder doesn't contain any .env, YAML, JSON, or TOML config files.
+            </p>
+          </div>
+          <div className="pt-2">
+            <p className="text-xs text-muted-foreground">
+              Try selecting a different folder or create some config files
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden config-matrix">
       {/* Top bar */}
       <div className="flex items-center gap-4 border-b border-border bg-card px-6 py-3 shadow-sm">
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative flex-1 max-w-sm search-bar">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search keys..."
@@ -183,7 +217,18 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                   className="px-6 py-3 text-left text-xs font-semibold font-mono text-foreground border-b border-border"
                   title={file.path}
                 >
-                  {file.path}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate">{file.path}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 opacity-60 hover:opacity-100 flex-shrink-0"
+                      onClick={() => copyAllFromFile(file.path)}
+                      title="Copy all values from this file"
+                    >
+                      <Files className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </th>
               ))}
             </tr>
@@ -191,8 +236,16 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
           <tbody>
             {filteredKeys.length === 0 ? (
               <tr>
-                <td colSpan={activeFiles.length + 1} className="px-6 py-12 text-center text-sm text-muted-foreground">
-                  No keys match filter
+                <td colSpan={activeFiles.length + 1} className="px-6 py-16">
+                  <div className="flex flex-col items-center justify-center space-y-3">
+                    <div className="rounded-full bg-muted p-4">
+                      <SearchX className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <div className="text-center space-y-1">
+                      <p className="text-sm font-medium text-foreground">No matching keys</p>
+                      <p className="text-xs text-muted-foreground">Try adjusting your search filter</p>
+                    </div>
+                  </div>
                 </td>
               </tr>
             ) : (

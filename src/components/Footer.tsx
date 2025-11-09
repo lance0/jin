@@ -63,7 +63,7 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button onClick={() => onExport(exportFormat)} className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform">
+          <Button onClick={() => onExport(exportFormat)} className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform export-button">
             <FileDown className="h-4 w-4" />
             Export Template
           </Button>

@@ -25,7 +25,43 @@
     }
   },
   "bundle": {
-    "active": false
+    "active": true,
+    "targets": ["dmg", "app"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "identifier": "com.jin.configwhisperer",
+    "publisher": "lance0",
+    "category": "DeveloperTool",
+    "shortDescription": "Config file management made easy",
+    "longDescription": "Jin - The Config Whisperer helps you manage configuration files across your projects. Scan for .env, YAML, JSON, and TOML files, detect inconsistencies, and export templates—all locally.",
+    "copyright": "Copyright © 2025 lance0. All rights reserved.",
+    "licenseFile": "../LICENSE",
+    "resources": [],
+    "macOS": {
+      "minimumSystemVersion": "10.13",
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
+    },
+    "linux": {
+      "deb": {
+        "depends": []
+      },
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    }
   },
   "plugins": {}
 }
