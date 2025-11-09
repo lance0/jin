@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned for Future Releases
+- Virtual scrolling for large datasets (500+ keys)
+- Two-file diff view for comparing configs
+- Auto-update mechanism
+- Homebrew formula
+- App Store distribution
+
+## [1.0.0] - 2025-01-15
+
 ### Added
 - Click-to-reveal for masked secrets in config matrix
 - Rescan button for quick folder re-scanning
 - Loading states with proper state management
-- Drag-and-drop folder selection
 - File column show/hide toggles in config matrix
 - Keyboard shortcuts (Cmd/Ctrl+O for open, Cmd/Ctrl+R for rescan, Cmd/Ctrl+E for export)
 - Export location chooser (save dialog)
@@ -35,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Toast close buttons** - users can now dismiss toast notifications manually
 - **Comprehensive tooltips** on all icon buttons and interactive elements
 - **Updated onboarding tour** with file watching feature explanation
+- **Mobile responsiveness** - all components adapt to small screens with responsive layouts
 
 ### Changed
 - **MAJOR PERFORMANCE IMPROVEMENTS**: Theme switching and overall responsiveness drastically improved
@@ -48,6 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed gradient text effects and backdrop-blur for better performance
 - Optimized ConfigMatrix component to eliminate animation overhead
 - HTML page title updated to "Jin – The Config Whisperer"
+- Simplified folder selection to button-only interface (removed drag-and-drop)
+- Streamlined UI by removing non-functional elements
 
 ### Fixed
 - Loading state properly resets after scan completes or fails
@@ -69,14 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Known Limitations
 - UI performance may degrade with 500+ config keys (use search/filter or hide columns)
-- Virtual scrolling for extremely large datasets deferred to v0.2.0
-
-### Planned for Future Releases
-- Virtual scrolling for large datasets (500+ keys) - planned for v0.2.0
-- Two-file diff view for comparing configs
-- Auto-update mechanism
-- Homebrew formula
-- App Store distribution
+- Virtual scrolling for extremely large datasets deferred to future release
 
 ## [0.1.0] - 2025-01-09
 

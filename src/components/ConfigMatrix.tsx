@@ -156,8 +156,8 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
   return (
     <div className="flex-1 flex flex-col overflow-hidden config-matrix">
       {/* Top bar */}
-      <div className="flex items-center gap-4 border-b border-border bg-card px-6 py-3 shadow-sm">
-        <div className="relative flex-1 max-w-sm search-bar">
+      <div className="flex items-center gap-2 md:gap-4 border-b border-border bg-card px-3 md:px-6 py-3 shadow-sm">
+        <div className="relative flex-1 md:max-w-sm search-bar">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search keys..."
@@ -169,9 +169,9 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+            <Button variant="outline" size="sm" className="gap-2 bg-transparent flex-shrink-0">
               <Columns className="h-4 w-4" />
-              Columns ({activeFiles.length}/{files.length})
+              <span className="hidden sm:inline">Columns</span> ({activeFiles.length}/{files.length})
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
@@ -199,9 +199,9 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
         {onRescan && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group">
+              <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group flex-shrink-0">
                 <RefreshCw className="h-4 w-4 group-active:animate-spin" />
-                Rescan
+                <span className="hidden sm:inline">Rescan</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Rescan project (⌘R / Ctrl+R)</TooltipContent>
@@ -224,13 +224,13 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
         <table className="w-full">
           <thead className="sticky top-0 bg-muted z-10 shadow-sm">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-foreground border-b border-border">
+              <th className="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-semibold text-foreground border-b border-border">
                 Key ({filteredKeys.length})
               </th>
               {activeFiles.map((file, idx) => (
                 <th
                   key={idx}
-                  className="px-6 py-3 text-left text-xs font-semibold font-mono text-foreground border-b border-border"
+                  className="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-semibold font-mono text-foreground border-b border-border"
                   title={file.path}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -256,7 +256,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
           <tbody>
             {filteredKeys.length === 0 ? (
               <tr>
-                <td colSpan={activeFiles.length + 1} className="px-6 py-16">
+                <td colSpan={activeFiles.length + 1} className="px-3 md:px-6 py-16">
                   <div className="flex flex-col items-center justify-center space-y-3">
                     <div className="rounded-full bg-muted p-4">
                       <SearchX className="h-8 w-8 text-muted-foreground" />
@@ -276,7 +276,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                     key={keyIdx}
                     className={`${keyIdx % 2 === 0 ? "bg-background" : "bg-muted/30"} hover:bg-accent/50`}
                   >
-                    <td className="px-6 py-3 text-sm font-mono font-medium text-foreground">{key}</td>
+                    <td className="px-3 md:px-6 py-2 md:py-3 text-sm font-mono font-medium text-foreground">{key}</td>
                     {activeFiles.map((file, fileIdx) => {
                       const entry = fileEntries.get(file.path);
                       const cellId = `${key}:${file.path}`;
@@ -284,7 +284,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
 
                       if (!entry) {
                         return (
-                          <td key={fileIdx} className="px-6 py-3 text-sm">
+                          <td key={fileIdx} className="px-3 md:px-6 py-2 md:py-3 text-sm">
                             <AlertTriangle className="h-4 w-4 text-warning" />
                           </td>
                         );
@@ -296,7 +296,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                         : String(entry.value ?? "");
 
                       return (
-                        <td key={fileIdx} className="px-6 py-3 text-sm">
+                        <td key={fileIdx} className="px-3 md:px-6 py-2 md:py-3 text-sm">
                           <div className="flex items-center gap-2 group">
                             {isSecret ? (
                               <Tooltip>

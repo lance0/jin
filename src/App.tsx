@@ -314,7 +314,7 @@ function App() {
         onToggleWatch={handleToggleWatch}
       />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         <IssuesPanel issues={issues} />
         <ConfigMatrix
           entries={entries}

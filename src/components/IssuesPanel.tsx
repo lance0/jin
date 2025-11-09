@@ -19,7 +19,7 @@ export const IssuesPanel = memo(function IssuesPanel({ issues }: IssuesPanelProp
 
   if (totalIssues === 0) {
     return (
-      <aside className="w-80 flex-shrink-0 border-r border-border bg-card p-6 shadow-sm issues-panel">
+      <aside className="w-full md:w-80 flex-shrink-0 border-r md:border-r border-b md:border-b-0 border-border bg-card p-4 md:p-6 shadow-sm issues-panel">
         <div className="flex items-center gap-2 mb-4">
           <h2 className="text-sm font-semibold">Issues</h2>
           <Badge variant="outline" className="bg-success/10 text-success border-success/20 shadow-sm">
@@ -30,7 +30,7 @@ export const IssuesPanel = memo(function IssuesPanel({ issues }: IssuesPanelProp
 
         <div className="space-y-4">
           {/* Celebration card */}
-          <div className="rounded-lg bg-gradient-to-br from-success/10 via-success/5 to-transparent border border-success/30 p-6 text-center shadow-sm">
+          <div className="rounded-lg bg-gradient-to-br from-success/10 via-success/5 to-transparent border border-success/30 p-4 md:p-6 text-center shadow-sm">
             <div className="relative inline-block mb-3">
               <Check className="h-12 w-12 text-success" />
               <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-success animate-pulse" />
@@ -52,8 +52,8 @@ export const IssuesPanel = memo(function IssuesPanel({ issues }: IssuesPanelProp
   }
 
   return (
-    <aside className="w-80 flex-shrink-0 border-r border-border bg-card overflow-y-auto shadow-sm issues-panel">
-      <div className="sticky top-0 bg-card border-b border-border p-4 z-10 shadow-sm">
+    <aside className="w-full md:w-80 flex-shrink-0 border-r md:border-r border-b md:border-b-0 border-border bg-card overflow-y-auto shadow-sm issues-panel">
+      <div className="sticky top-0 bg-card border-b border-border p-3 md:p-4 z-10 shadow-sm">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold">Issues</h2>
           <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 shadow-sm">
@@ -63,7 +63,7 @@ export const IssuesPanel = memo(function IssuesPanel({ issues }: IssuesPanelProp
         </div>
       </div>
 
-      <Accordion type="multiple" defaultValue={["missing", "duplicates"]} className="px-4">
+      <Accordion type="multiple" defaultValue={["missing", "duplicates"]} className="px-3 md:px-4 pb-4">
         {issues.missingByEnvFile.length > 0 && (
           <AccordionItem value="missing">
             <AccordionTrigger className="text-sm">

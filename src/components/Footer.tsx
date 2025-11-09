@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { FileDown, ExternalLink, ChevronDown } from "lucide-react"
+import { FileDown, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import {
@@ -39,13 +39,7 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
         )}
       </div>
 
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:scale-105 active:scale-95 transition-transform">
-          Learn best practices
-          <ExternalLink className="h-3 w-3" />
-        </Button>
-
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2 bg-transparent">
@@ -76,7 +70,6 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
             </TooltipTrigger>
             <TooltipContent>Export config template (⌘E / Ctrl+E)</TooltipContent>
           </Tooltip>
-        </div>
       </div>
     </footer>
   )

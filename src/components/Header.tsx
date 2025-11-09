@@ -18,28 +18,28 @@ export const Header = memo(function Header({ projectPath, onProjectChange, onRes
   const [aboutOpen, setAboutOpen] = useState(false)
 
   return (
-    <header className="flex items-center justify-between border-b border-border bg-card px-6 py-3 shadow-sm">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
+    <header className="flex items-center justify-between border-b border-border bg-card px-3 md:px-6 py-3 shadow-sm">
+      <div className="flex items-center gap-2 md:gap-4 min-w-0">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <span className="text-xl transition-transform hover:scale-110" role="img" aria-label="Hedgehog">
             🦔
           </span>
-          <h1 className="text-lg font-semibold text-foreground">
+          <h1 className="text-lg font-semibold text-foreground whitespace-nowrap">
             Jin
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onProjectChange}
-                className="gap-2 hover:scale-105 active:scale-95 transition-transform"
+                className="gap-2 hover:scale-105 active:scale-95 transition-transform min-w-0"
               >
-                <FolderOpen className="h-4 w-4" />
-                <span className="max-w-xs truncate text-sm font-mono text-muted-foreground">{projectPath}</span>
+                <FolderOpen className="h-4 w-4 flex-shrink-0" />
+                <span className="hidden sm:inline max-w-[8rem] md:max-w-xs truncate text-sm font-mono text-muted-foreground">{projectPath}</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Change project folder (⌘O / Ctrl+O)</TooltipContent>
@@ -47,7 +47,7 @@ export const Header = memo(function Header({ projectPath, onProjectChange, onRes
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

@@ -74,7 +74,7 @@ Jin is a cross-platform desktop application that scans your project for configur
 #### Option 1: Download Release (Recommended)
 
 Download the latest release for your platform:
-- **macOS**: Download `.dmg` installer from [Releases](https://github.com/yourusername/jin/releases)
+- **macOS**: Download `.dmg` installer from [Releases](https://github.com/lance0/jin/releases)
 - **Windows**: Download `.msi` or `.exe` installer (coming soon)
 - **Linux**: Download `.deb` or `.AppImage` (coming soon)
 
@@ -87,7 +87,7 @@ Download the latest release for your platform:
 **Steps:**
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/jin.git
+git clone https://github.com/lance0/jin.git
 cd jin/jin-tauri
 
 # Install dependencies
@@ -107,9 +107,8 @@ Built installers will be in `src-tauri/target/release/bundle/`
 ## 📖 Usage
 
 ### 1. Choose a Project Folder
-- Click **"Choose a project folder"** on the welcome screen
+- Click **"Choose Project Folder"** on the welcome screen
 - Or use keyboard shortcut: **⌘O** (Mac) / **Ctrl+O** (Windows/Linux)
-- Drag and drop folder into the app window
 
 ### 2. Review Issues
 - Check the **Issues Panel** on the left for:
@@ -300,8 +299,8 @@ MIT License - see [LICENSE](./LICENSE) for details
 
 ## 📧 Contact
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/jin/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/jin/discussions)
+- **Issues**: [GitHub Issues](https://github.com/lance0/jin/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/lance0/jin/discussions)
 
 ---
 

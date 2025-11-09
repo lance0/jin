@@ -1,6 +1,6 @@
 # Jin Roadmap
 
-## ✅ Phase 1: MVP (Completed - Weekend 1)
+## ✅ Phase 1: MVP (Completed - v0.1.0)
 
 ### Core Functionality
 - [x] Tauri 2 + React 19 + Vite 5 setup
@@ -35,7 +35,7 @@
 
 ---
 
-## ✅ Phase 2: Enhancement & Performance (COMPLETED)
+## ✅ Phase 2: Enhancement & Performance (Completed - v1.0.0)
 
 ### Performance ✅ COMPLETED
 - [x] Async backend with Tokio runtime
@@ -53,7 +53,7 @@
 ### UI Improvements ✅ COMPLETED
 - [x] Rescan button (completed)
 - [x] Click-to-reveal for secrets (completed)
-- [x] Drag-and-drop folder feedback (completed)
+- [x] Folder selection UI (completed)
 - [x] File column show/hide toggles (completed)
 - [x] Keyboard shortcuts (Cmd/Ctrl+O, Cmd/Ctrl+E, Cmd/Ctrl+R) (completed)
 - [x] Add app icon (hedgehog theme) (completed)
@@ -74,6 +74,7 @@
 - [x] Toast close buttons (completed)
 - [x] Comprehensive tooltips on all interactive elements (completed)
 - [x] Updated onboarding tour with file watching (completed)
+- [x] Mobile responsiveness (completed)
 
 ---
 
@@ -154,10 +155,10 @@
 - ✅ Basic error handling
 
 ### Phase 2 Goals
-- Scan <3s for 2k files
-- Zero crashes in normal usage
-- 95%+ test coverage
-- Responsive on mobile
+- ✅ Scan <3s for 2k files
+- ✅ Zero crashes in normal usage
+- 95%+ test coverage (pending)
+- ✅ Responsive on mobile
 
 ### Long-term Goals
 - 10k+ users
