@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#f0f0f0"/>
+
+  <!-- Hedgehog body (brown) -->
+  <ellipse cx="256" cy="300" rx="140" ry="100" fill="#8B6F47"/>
+
+  <!-- Hedgehog face (lighter brown) -->
+  <ellipse cx="256" cy="280" rx="100" ry="90" fill="#C9A87C"/>
+
+  <!-- Spikes (darker brown, multiple triangles) -->
+  <g fill="#5D4E37">
+    <!-- Top spikes -->
+    <path d="M 256 180 L 240 220 L 272 220 Z"/>
+    <path d="M 220 190 L 210 230 L 240 225 Z"/>
+    <path d="M 292 190 L 302 230 L 272 225 Z"/>
+    <path d="M 190 210 L 185 250 L 210 245 Z"/>
+    <path d="M 322 210 L 327 250 L 302 245 Z"/>
+
+    <!-- Side spikes -->
+    <path d="M 160 250 L 165 280 L 180 270 Z"/>
+    <path d="M 352 250 L 347 280 L 332 270 Z"/>
+    <path d="M 150 290 L 160 315 L 170 300 Z"/>
+    <path d="M 362 290 L 352 315 L 342 300 Z"/>
+
+    <!-- Back spikes -->
+    <path d="M 180 330 L 190 355 L 200 340 Z"/>
+    <path d="M 332 330 L 322 355 L 312 340 Z"/>
+    <path d="M 220 350 L 225 375 L 235 360 Z"/>
+    <path d="M 292 350 L 287 375 L 277 360 Z"/>
+    <path d="M 256 360 L 256 385 L 266 370 Z"/>
+  </g>
+
+  <!-- Nose (black) -->
+  <circle cx="256" cy="290" r="8" fill="#000000"/>
+
+  <!-- Eyes (black) -->
+  <circle cx="235" cy="270" r="6" fill="#000000"/>
+  <circle cx="277" cy="270" r="6" fill="#000000"/>
+
+  <!-- Eye shine (white) -->
+  <circle cx="237" cy="268" r="2" fill="#ffffff"/>
+  <circle cx="279" cy="268" r="2" fill="#ffffff"/>
+
+  <!-- Smile -->
+  <path d="M 246 298 Q 256 303 266 298" stroke="#000000" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Feet (darker brown) -->
+  <ellipse cx="220" cy="375" rx="20" ry="12" fill="#5D4E37"/>
+  <ellipse cx="292" cy="375" rx="20" ry="12" fill="#5D4E37"/>
+
+  <!-- Config file symbol (tiny document with gear overlay in corner) -->
+  <g transform="translate(340, 340)">
+    <!-- Document -->
+    <rect x="0" y="0" width="60" height="75" rx="4" fill="#ffffff" stroke="#333333" stroke-width="3"/>
+    <line x1="10" y1="15" x2="50" y2="15" stroke="#666666" stroke-width="2"/>
+    <line x1="10" y1="30" x2="50" y2="30" stroke="#666666" stroke-width="2"/>
+    <line x1="10" y1="45" x2="40" y2="45" stroke="#666666" stroke-width="2"/>
+
+    <!-- Gear overlay -->
+    <circle cx="45" cy="60" r="18" fill="#4CAF50" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="45" cy="60" r="10" fill="#ffffff"/>
+    <!-- Gear teeth -->
+    <rect x="43" y="42" width="4" height="8" fill="#4CAF50"/>
+    <rect x="43" y="70" width="4" height="8" fill="#4CAF50"/>
+    <rect x="27" y="58" width="8" height="4" fill="#4CAF50"/>
+    <rect x="55" y="58" width="8" height="4" fill="#4CAF50"/>
+  </g>
+</svg>
