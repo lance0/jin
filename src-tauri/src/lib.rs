@@ -14,22 +14,40 @@ use scanner::scan_directory;
 use types::{NormalizedEntry, ParseError, ScanResult, ScanSummary};
 
 #[tauri::command]
-fn scan_folder(path: String) -> Result<ScanResult, String> {
+async fn scan_folder(path: String) -> Result<ScanResult, String> {
     // Step 1: Discover files
     let mut files = scan_directory(&path)?;
 
-    // Step 2: Parse each file
+    // Step 2: Parse files in parallel
+    let mut parse_tasks = Vec::new();
+    for file in &files {
+        let path_clone = path.clone();
+        let file_path = file.path.clone();
+        let file_format = file.format.clone();
+
+        parse_tasks.push(tokio::spawn(async move {
+            parse_file(&path_clone, &file_path, &file_format).await
+        }));
+    }
+
+    // Wait for all parse tasks to complete
     let mut all_entries: Vec<NormalizedEntry> = Vec::new();
     let mut parse_errors: Vec<ParseError> = Vec::new();
 
-    for file in &mut files {
-        match parse_file(&path, &file.path, &file.format) {
-            Ok(entries) => {
-                file.count = entries.len();
+    for (idx, task) in parse_tasks.into_iter().enumerate() {
+        match task.await {
+            Ok(Ok(entries)) => {
+                files[idx].count = entries.len();
                 all_entries.extend(entries);
             }
-            Err(err) => {
+            Ok(Err(err)) => {
                 parse_errors.push(err);
+            }
+            Err(e) => {
+                parse_errors.push(ParseError {
+                    file: files[idx].path.clone(),
+                    message: format!("Task failed: {}", e),
+                });
             }
         }
     }
@@ -58,8 +76,8 @@ fn scan_folder(path: String) -> Result<ScanResult, String> {
 }
 
 #[tauri::command]
-fn export_env_example_cmd(path: String, entries: Vec<NormalizedEntry>) -> Result<String, String> {
-    export_env_example(&path, &entries)
+async fn export_env_example_cmd(path: String, entries: Vec<NormalizedEntry>) -> Result<String, String> {
+    export_env_example(&path, &entries).await
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

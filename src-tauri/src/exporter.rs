@@ -1,10 +1,9 @@
 use std::collections::HashSet;
-use std::fs;
 use std::path::Path;
 
 use crate::types::{InferredType, NormalizedEntry};
 
-pub fn export_env_example(root_path: &str, entries: &[NormalizedEntry]) -> Result<String, String> {
+pub async fn export_env_example(root_path: &str, entries: &[NormalizedEntry]) -> Result<String, String> {
     // Get unique keys sorted alphabetically
     let mut unique_keys: Vec<String> = entries
         .iter()
@@ -54,7 +53,7 @@ pub fn export_env_example(root_path: &str, entries: &[NormalizedEntry]) -> Resul
 
     // Write to file
     let output_path = Path::new(root_path).join(".env.example");
-    fs::write(&output_path, &content).map_err(|e| format!("Failed to write file: {}", e))?;
+    tokio::fs::write(&output_path, &content).await.map_err(|e| format!("Failed to write file: {}", e))?;
 
     Ok(output_path.to_string_lossy().to_string())
 }

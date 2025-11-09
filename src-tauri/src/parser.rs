@@ -1,17 +1,16 @@
 use std::collections::HashMap;
-use std::fs;
 use std::path::Path;
 
 use crate::types::{InferredType, NormalizedEntry, ParseError, SourceFormat};
 
-pub fn parse_file(
+pub async fn parse_file(
     root_path: &str,
     relative_path: &str,
     format: &SourceFormat,
 ) -> Result<Vec<NormalizedEntry>, ParseError> {
     let full_path = Path::new(root_path).join(relative_path);
 
-    let content = fs::read_to_string(&full_path).map_err(|e| ParseError {
+    let content = tokio::fs::read_to_string(&full_path).await.map_err(|e| ParseError {
         file: relative_path.to_string(),
         message: format!("Failed to read file: {}", e),
     })?;
