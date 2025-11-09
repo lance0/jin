@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, memo } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff } from "lucide-react";
+import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff, Copy } from "lucide-react";
+import { toast } from "sonner";
 import type { NormalizedEntry, DiscoveredFile } from "../types";
 
 interface ConfigMatrixProps {
@@ -51,6 +52,15 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
       }
       return newRevealed;
     });
+  }, []);
+
+  const copyToClipboard = useCallback(async (text: string, key: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(`Copied "${key}" to clipboard`);
+    } catch (err) {
+      toast.error("Failed to copy to clipboard");
+    }
   }, []);
 
   const maskValue = (value: any): string => {
@@ -144,22 +154,31 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
 
                       return (
                         <td key={fileIdx} className="px-6 py-3 text-sm">
-                          <button
-                            onClick={() => isSecret ? toggleReveal(key, file.path) : undefined}
-                            className="flex items-center gap-2 text-success hover:text-success/80"
-                          >
-                            {isRevealed ? (
-                              <>
-                                <Eye className="h-4 w-4" />
-                                <span className="font-mono text-xs">{displayValue}</span>
-                              </>
-                            ) : (
-                              <>
-                                {isSecret ? <EyeOff className="h-4 w-4" /> : <Check className="h-4 w-4" />}
-                                <span className="font-mono text-xs">{displayValue}</span>
-                              </>
-                            )}
-                          </button>
+                          <div className="flex items-center gap-2 group">
+                            <button
+                              onClick={() => isSecret ? toggleReveal(key, file.path) : undefined}
+                              className="flex items-center gap-2 text-success hover:text-success/80"
+                            >
+                              {isRevealed ? (
+                                <>
+                                  <Eye className="h-4 w-4" />
+                                  <span className="font-mono text-xs">{displayValue}</span>
+                                </>
+                              ) : (
+                                <>
+                                  {isSecret ? <EyeOff className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+                                  <span className="font-mono text-xs">{displayValue}</span>
+                                </>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => copyToClipboard(String(entry.value ?? ""), key)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-accent"
+                              title="Copy value"
+                            >
+                              <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                            </button>
+                          </div>
                         </td>
                       );
                     })}

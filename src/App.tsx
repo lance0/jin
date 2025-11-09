@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { toast, Toaster } from "sonner";
@@ -29,11 +29,39 @@ function App() {
 
       const result = await invoke<ScanResult>("scan_folder", { path });
       setScanResult(result);
-      toast.success(`Scanned ${result.summary.totalFiles} files successfully`);
+
+      const { totalFiles, uniqueKeys } = result.summary;
+      const issueCount = result.issues.duplicates.length +
+                         result.issues.missingByEnvFile.length +
+                         result.issues.parseErrors.length;
+
+      if (issueCount > 0) {
+        toast.warning(`Found ${issueCount} issue${issueCount === 1 ? '' : 's'} across ${totalFiles} config files`, {
+          description: `Scanned ${uniqueKeys} unique keys`
+        });
+      } else {
+        toast.success(`All config files look good!`, {
+          description: `${totalFiles} files, ${uniqueKeys} keys`
+        });
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
-      toast.error(`Scan failed: ${errorMessage}`);
+
+      // Provide more helpful error messages
+      if (errorMessage.includes("does not exist")) {
+        toast.error("Folder not found", {
+          description: "The selected folder no longer exists or you don't have permission to access it."
+        });
+      } else if (errorMessage.includes("not a directory")) {
+        toast.error("Invalid selection", {
+          description: "Please select a folder, not a file."
+        });
+      } else {
+        toast.error("Scan failed", {
+          description: errorMessage
+        });
+      }
     } finally {
       setIsScanning(false);
     }
@@ -52,7 +80,9 @@ function App() {
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      toast.error(`Failed to open folder: ${errorMessage}`);
+      toast.error("Failed to open folder dialog", {
+        description: errorMessage
+      });
     }
   }, [scanFolder]);
 
@@ -64,21 +94,64 @@ function App() {
 
   const handleExport = useCallback(async () => {
     if (!projectPath || entries.length === 0) {
-      toast.error("No data to export");
+      toast.error("No data to export", {
+        description: "Please scan a project folder first"
+      });
       return;
     }
 
     try {
-      await invoke("export_env_example_cmd", {
+      const path = await invoke<string>("export_env_example_cmd", {
         path: projectPath,
         entries,
       });
-      toast.success(".env.example exported successfully!");
+      toast.success(".env.example created!", {
+        description: `Exported ${entries.length} keys to project root`
+      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      toast.error(`Export failed: ${errorMessage}`);
+
+      if (errorMessage.includes("permission")) {
+        toast.error("Export failed", {
+          description: "You don't have permission to write to this folder"
+        });
+      } else {
+        toast.error("Export failed", {
+          description: errorMessage
+        });
+      }
     }
   }, [projectPath, entries]);
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const modKey = isMac ? e.metaKey : e.ctrlKey;
+
+      if (modKey && e.key === 'o') {
+        e.preventDefault();
+        handleChooseFolder();
+      } else if (modKey && e.key === 'r') {
+        e.preventDefault();
+        if (projectPath) {
+          handleRescan();
+        } else {
+          toast.info("No project opened yet");
+        }
+      } else if (modKey && e.key === 'e') {
+        e.preventDefault();
+        if (projectPath) {
+          handleExport();
+        } else {
+          toast.info("No project opened yet");
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleChooseFolder, handleRescan, handleExport, projectPath]);
 
   // Show welcome screen if no project selected
   if (!projectPath) {

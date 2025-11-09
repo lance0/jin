@@ -1,11 +1,54 @@
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { FolderOpen } from "lucide-react";
+import { toast } from "sonner";
 
 interface WelcomeScreenProps {
   onChooseFolder: () => void;
 }
 
 export function WelcomeScreen({ onChooseFolder }: WelcomeScreenProps) {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set to false if we're leaving the drop zone entirely
+    if (e.currentTarget === e.target) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    // For Tauri, we need to handle file drops differently
+    // The files will be available via the DataTransfer API
+    const files = Array.from(e.dataTransfer.files);
+
+    if (files.length === 0) {
+      toast.error("No folder dropped. Please try again.");
+      return;
+    }
+
+    // In Tauri, when you drag a folder, it comes through as a file with a path
+    // We'll use the file picker instead since drag-drop of folders requires special permissions
+    toast.info("Please use the folder picker button instead. Drag-and-drop requires special permissions in Tauri.");
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-8">
       <div className="max-w-2xl text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -28,9 +71,23 @@ export function WelcomeScreen({ onChooseFolder }: WelcomeScreenProps) {
         </p>
 
         {/* Drop zone */}
-        <div className="mb-6 rounded-lg border-2 border-dashed border-border bg-card p-12 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary hover:bg-accent hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 duration-500 delay-600 group">
-          <FolderOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground transition-transform group-hover:scale-110 group-hover:text-primary" />
-          <p className="mb-4 text-sm text-muted-foreground">Drop a project folder to begin</p>
+        <div
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`mb-6 rounded-lg border-2 border-dashed p-12 shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 delay-600 group ${
+            isDragging
+              ? "border-primary bg-primary/10 scale-[1.02] shadow-xl"
+              : "border-border bg-card hover:shadow-xl hover:border-primary hover:bg-accent hover:scale-[1.02]"
+          }`}
+        >
+          <FolderOpen className={`mx-auto mb-4 h-12 w-12 transition-transform group-hover:scale-110 ${
+            isDragging ? "text-primary scale-110" : "text-muted-foreground group-hover:text-primary"
+          }`} />
+          <p className="mb-4 text-sm text-muted-foreground">
+            {isDragging ? "Drop folder here..." : "Drop a project folder to begin"}
+          </p>
           <Button
             onClick={onChooseFolder}
             size="lg"
