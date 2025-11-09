@@ -4,6 +4,8 @@
 
 Jin is a cross-platform desktop application that scans your project for configuration files, normalizes keys, highlights issues, and helps you maintain clean, consistent config files across your codebase.
 
+![Jin Screenshot](jinscreen.png)
+
 **In loving memory of Jin the hedgehog** 🦔
 
 ---
