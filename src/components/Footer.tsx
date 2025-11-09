@@ -1,29 +1,30 @@
-import { memo } from "react";
-import { FileDown, ExternalLink } from "lucide-react"
+import { memo, useState } from "react";
+import { FileDown, ExternalLink, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import type { ExportFormat } from "@/types"
 
 interface FooterProps {
-  onExport: () => void
+  onExport: (format: ExportFormat) => void
   issueCount: number
 }
 
 export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps) {
-  const { toast } = useToast()
+  const [exportFormat, setExportFormat] = useState<ExportFormat>("env");
 
-  const handleExport = () => {
-    onExport()
-    toast({
-      title: ".env.example saved",
-      description: "Your environment template has been created.",
-      action: (
-        <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-          <ExternalLink className="h-3 w-3" />
-          Reveal
-        </Button>
-      ),
-    })
-  }
+  const formatLabels: Record<ExportFormat, string> = {
+    env: ".env",
+    json: "JSON",
+    yaml: "YAML",
+  };
 
   return (
     <footer className="flex items-center justify-between border-t border-border bg-card px-6 py-4 shadow-sm">
@@ -42,10 +43,31 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
           Learn best practices
           <ExternalLink className="h-3 w-3" />
         </Button>
-        <Button onClick={handleExport} className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform">
-          <FileDown className="h-4 w-4" />
-          Export .env.example
-        </Button>
+
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                {formatLabels[exportFormat]}
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Export Format</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup value={exportFormat} onValueChange={(v) => setExportFormat(v as ExportFormat)}>
+                <DropdownMenuRadioItem value="env">.env Format</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="json">JSON Format</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="yaml">YAML Format</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button onClick={() => onExport(exportFormat)} className="gap-2 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-transform">
+            <FileDown className="h-4 w-4" />
+            Export Template
+          </Button>
+        </div>
       </div>
     </footer>
   )

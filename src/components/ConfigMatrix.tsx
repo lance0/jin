@@ -1,9 +1,17 @@
-import { useState, useMemo, useCallback, memo } from "react";
+import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff, Copy } from "lucide-react";
+import { Search, RefreshCw, Check, AlertTriangle, Eye, EyeOff, Copy, Columns } from "lucide-react";
 import { toast } from "sonner";
 import type { NormalizedEntry, DiscoveredFile } from "../types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "./ui/dropdown-menu";
 
 interface ConfigMatrixProps {
   entries: NormalizedEntry[];
@@ -14,6 +22,38 @@ interface ConfigMatrixProps {
 export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onRescan }: ConfigMatrixProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [revealedSecrets, setRevealedSecrets] = useState<Set<string>>(new Set());
+  const [visibleFiles, setVisibleFiles] = useState<Set<string>>(new Set(files.map(f => f.path)));
+
+  // Update visible files when files change
+  useEffect(() => {
+    setVisibleFiles(new Set(files.map(f => f.path)));
+  }, [files]);
+
+  // Filter to only visible files
+  const activeFiles = useMemo(() =>
+    files.filter(f => visibleFiles.has(f.path)),
+    [files, visibleFiles]
+  );
+
+  const toggleFileVisibility = useCallback((path: string) => {
+    setVisibleFiles(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(path)) {
+        newSet.delete(path);
+      } else {
+        newSet.add(path);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const showAllFiles = useCallback(() => {
+    setVisibleFiles(new Set(files.map(f => f.path)));
+  }, [files]);
+
+  const hideAllFiles = useCallback(() => {
+    setVisibleFiles(new Set());
+  }, []);
 
   // Get unique keys
   const uniqueKeys = useMemo(() => {
@@ -91,6 +131,35 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
           />
         </div>
 
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+              <Columns className="h-4 w-4" />
+              Columns ({activeFiles.length}/{files.length})
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem checked={false} onCheckedChange={showAllFiles}>
+              Show All
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={false} onCheckedChange={hideAllFiles}>
+              Hide All
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuSeparator />
+            {files.map((file) => (
+              <DropdownMenuCheckboxItem
+                key={file.path}
+                checked={visibleFiles.has(file.path)}
+                onCheckedChange={() => toggleFileVisibility(file.path)}
+              >
+                {file.path}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         {onRescan && (
           <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group">
             <RefreshCw className="h-4 w-4 group-active:animate-spin" />
@@ -107,7 +176,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
               <th className="px-6 py-3 text-left text-xs font-semibold text-foreground border-b border-border">
                 Key ({filteredKeys.length})
               </th>
-              {files.map((file, idx) => (
+              {activeFiles.map((file, idx) => (
                 <th
                   key={idx}
                   className="px-6 py-3 text-left text-xs font-semibold font-mono text-foreground border-b border-border"
@@ -121,7 +190,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
           <tbody>
             {filteredKeys.length === 0 ? (
               <tr>
-                <td colSpan={files.length + 1} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                <td colSpan={activeFiles.length + 1} className="px-6 py-12 text-center text-sm text-muted-foreground">
                   No keys match filter
                 </td>
               </tr>
@@ -134,7 +203,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                     className={`${keyIdx % 2 === 0 ? "bg-background" : "bg-muted/30"} hover:bg-accent/50`}
                   >
                     <td className="px-6 py-3 text-sm font-mono font-medium text-foreground">{key}</td>
-                    {files.map((file, fileIdx) => {
+                    {activeFiles.map((file, fileIdx) => {
                       const entry = fileEntries.get(file.path);
                       const cellId = `${key}:${file.path}`;
                       const isRevealed = revealedSecrets.has(cellId);

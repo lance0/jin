@@ -11,7 +11,7 @@ use analyzer::analyze_entries;
 use exporter::export_env_example;
 use parser::parse_file;
 use scanner::scan_directory;
-use types::{NormalizedEntry, ParseError, ScanResult, ScanSummary};
+use types::{ExportFormat, NormalizedEntry, ParseError, ScanResult, ScanSummary};
 
 #[tauri::command]
 async fn scan_folder(path: String) -> Result<ScanResult, String> {
@@ -76,8 +76,8 @@ async fn scan_folder(path: String) -> Result<ScanResult, String> {
 }
 
 #[tauri::command]
-async fn export_env_example_cmd(path: String, entries: Vec<NormalizedEntry>) -> Result<String, String> {
-    export_env_example(&path, &entries).await
+async fn export_env_example_cmd(output_path: String, entries: Vec<NormalizedEntry>, format: ExportFormat) -> Result<String, String> {
+    export_env_example(&output_path, &entries, format).await
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

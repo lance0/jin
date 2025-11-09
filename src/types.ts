@@ -1,5 +1,7 @@
 export type SourceFormat = 'env' | 'yaml' | 'json' | 'toml';
 
+export type ExportFormat = 'env' | 'json' | 'yaml';
+
 export type InferredType = 'string' | 'number' | 'boolean' | 'null' | 'unknown';
 
 export interface NormalizedEntry {

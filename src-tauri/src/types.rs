@@ -11,6 +11,14 @@ pub enum SourceFormat {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
+pub enum ExportFormat {
+    Env,
+    Json,
+    Yaml,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum InferredType {
     String,
     Number,

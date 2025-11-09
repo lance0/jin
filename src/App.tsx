@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useEffect } from "react";
-import { open } from "@tauri-apps/plugin-dialog";
+import { open, save } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { toast, Toaster } from "sonner";
 import { WelcomeScreen } from "./components/WelcomeScreen";
@@ -92,7 +92,7 @@ function App() {
     }
   }, [projectPath, scanFolder]);
 
-  const handleExport = useCallback(async () => {
+  const handleExport = useCallback(async (format: 'env' | 'json' | 'yaml') => {
     if (!projectPath || entries.length === 0) {
       toast.error("No data to export", {
         description: "Please scan a project folder first"
@@ -101,19 +101,52 @@ function App() {
     }
 
     try {
-      const path = await invoke<string>("export_env_example_cmd", {
-        path: projectPath,
-        entries,
+      // Determine file extension and filter based on format
+      const fileExtensions: Record<'env' | 'json' | 'yaml', { name: string; extensions: string[]; defaultName: string }> = {
+        env: { name: 'Environment Files', extensions: ['example', 'env'], defaultName: '.env.example' },
+        json: { name: 'JSON Files', extensions: ['json'], defaultName: 'config.example.json' },
+        yaml: { name: 'YAML Files', extensions: ['yaml', 'yml'], defaultName: 'config.example.yaml' },
+      };
+
+      const fileConfig = fileExtensions[format];
+
+      // Show save dialog to choose export location
+      const outputPath = await save({
+        defaultPath: `${projectPath}/${fileConfig.defaultName}`,
+        filters: [{
+          name: fileConfig.name,
+          extensions: fileConfig.extensions
+        }],
+        title: 'Save Environment Template'
       });
-      toast.success(".env.example created!", {
-        description: `Exported ${entries.length} keys to project root`
+
+      // User cancelled the dialog
+      if (!outputPath) {
+        return;
+      }
+
+      // Call backend to export
+      await invoke<string>("export_env_example_cmd", {
+        outputPath,
+        entries,
+        format,
+      });
+
+      const formatLabels: Record<'env' | 'json' | 'yaml', string> = {
+        env: '.env',
+        json: 'JSON',
+        yaml: 'YAML',
+      };
+
+      toast.success("Environment template created!", {
+        description: `Exported ${entries.length} keys as ${formatLabels[format]}`
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
 
       if (errorMessage.includes("permission")) {
         toast.error("Export failed", {
-          description: "You don't have permission to write to this folder"
+          description: "You don't have permission to write to this location"
         });
       } else {
         toast.error("Export failed", {
@@ -142,7 +175,7 @@ function App() {
       } else if (modKey && e.key === 'e') {
         e.preventDefault();
         if (projectPath) {
-          handleExport();
+          handleExport('env');
         } else {
           toast.info("No project opened yet");
         }
