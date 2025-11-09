@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
+  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -141,12 +142,12 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuCheckboxItem checked={false} onCheckedChange={showAllFiles}>
+            <DropdownMenuItem onClick={showAllFiles}>
               Show All
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem checked={false} onCheckedChange={hideAllFiles}>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={hideAllFiles}>
               Hide All
-            </DropdownMenuCheckboxItem>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             {files.map((file) => (
               <DropdownMenuCheckboxItem
