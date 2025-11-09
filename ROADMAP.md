@@ -124,6 +124,9 @@
 - [x] Windows MSI/NSIS installers (completed)
 - [x] Linux DEB and AppImage (completed)
 - [x] Distribution documentation (completed)
+- [x] GitHub Actions CI/CD workflows (completed)
+  - [x] Automated build workflow for PRs and main branch (completed)
+  - [x] Automated release workflow with multi-platform builds (completed)
 - [ ] Auto-update mechanism
 - [ ] Notarization automation (macOS)
 - [ ] Homebrew formula

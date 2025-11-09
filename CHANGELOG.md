@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- GitHub Actions CI/CD workflows for automated testing and releases
+  - Build workflow runs on every push to main and pull requests
+  - Release workflow automatically builds cross-platform installers on git tags
+  - Multi-platform matrix builds (macOS Intel + ARM, Windows, Linux)
+- Screenshot showcasing Jin's UI in the README
+- Auto-import app version from package.json for consistent versioning
+
 ### Planned for Future Releases
 - Virtual scrolling for large datasets (500+ keys)
 - Two-file diff view for comparing configs
