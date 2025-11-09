@@ -169,15 +169,10 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                  <Columns className="h-4 w-4" />
-                  Columns ({activeFiles.length}/{files.length})
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Show/hide file columns</TooltipContent>
-            </Tooltip>
+            <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+              <Columns className="h-4 w-4" />
+              Columns ({activeFiles.length}/{files.length})
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>

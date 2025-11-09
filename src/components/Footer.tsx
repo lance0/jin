@@ -48,15 +48,10 @@ export const Footer = memo(function Footer({ onExport, issueCount }: FooterProps
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                    {formatLabels[exportFormat]}
-                    <ChevronDown className="h-3 w-3" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Choose export format</TooltipContent>
-              </Tooltip>
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                {formatLabels[exportFormat]}
+                <ChevronDown className="h-3 w-3" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Export Format</DropdownMenuLabel>
