@@ -77,12 +77,12 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
             placeholder="Search keys..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 shadow-sm focus:shadow-md transition-shadow"
+            className="pl-9"
           />
         </div>
 
         {onRescan && (
-          <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-transform group">
+          <Button onClick={onRescan} variant="outline" size="sm" className="gap-2 bg-transparent group">
             <RefreshCw className="h-4 w-4 group-active:animate-spin" />
             Rescan
           </Button>
@@ -121,7 +121,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                 return (
                   <tr
                     key={keyIdx}
-                    className={`${keyIdx % 2 === 0 ? "bg-background" : "bg-muted/30"} hover:bg-accent/50 transition-colors`}
+                    className={`${keyIdx % 2 === 0 ? "bg-background" : "bg-muted/30"} hover:bg-accent/50`}
                   >
                     <td className="px-6 py-3 text-sm font-mono font-medium text-foreground">{key}</td>
                     {files.map((file, fileIdx) => {
@@ -132,7 +132,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                       if (!entry) {
                         return (
                           <td key={fileIdx} className="px-6 py-3 text-sm">
-                            <AlertTriangle className="h-4 w-4 text-warning transition-transform hover:scale-110" />
+                            <AlertTriangle className="h-4 w-4 text-warning" />
                           </td>
                         );
                       }
@@ -146,7 +146,7 @@ export const ConfigMatrix = memo(function ConfigMatrix({ entries, files, onResca
                         <td key={fileIdx} className="px-6 py-3 text-sm">
                           <button
                             onClick={() => isSecret ? toggleReveal(key, file.path) : undefined}
-                            className="flex items-center gap-2 text-success hover:text-success/80 transition-transform hover:scale-105 active:scale-95"
+                            className="flex items-center gap-2 text-success hover:text-success/80"
                           >
                             {isRevealed ? (
                               <>
