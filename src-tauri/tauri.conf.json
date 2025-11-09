@@ -50,12 +50,7 @@
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
-      "timestampUrl": "",
-      "nsis": {
-        "installerIcon": "icons/icon.ico",
-        "installMode": "perUser"
-      },
-      "wix": null
+      "timestampUrl": ""
     },
     "linux": {
       "deb": {
