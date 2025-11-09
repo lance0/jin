@@ -34,6 +34,8 @@ function App() {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
       toast.error(`Scan failed: ${errorMessage}`);
+    } finally {
+      setIsScanning(false);
     }
   }, [setScanResult, setIsScanning, setError]);
 
